@@ -421,13 +421,8 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              required: [resto_image_url, resto_name, location, menu_image_url, facility, category, table_quota, booking_fee, latitude, longitude]
+              required: [resto_name, location, menu_image_url, facility, category, table_quota, booking_fee, latitude, longitude]
               properties:
-                resto_image_url:
-                  type: array
-                  items: 
-                    type: string
-                    format: binary
                 resto_name:
                   type: string
                 location:      
@@ -483,6 +478,7 @@ paths:
                       status: "failed",
                       message: "please make sure all fields are filled in correctly",
                     }
+              
     put:
       tags:
         - Restaurants
@@ -805,7 +801,68 @@ paths:
                       status: "failed",
                       message: "please make sure all fields are filled in correctly",
                     }                
-
+  
+  /restaurants/upload/{idrestaurant}:
+    post:
+      tags:
+        - Restaurants
+      description: fitur untuk upload foto restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk menambahkan foto 
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [resto_image_url]
+              properties:
+                resto_image_url:
+                    type: string
+                    format: binary
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response success:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "success operation create data",
+                    }
+            image/png:
+                  schema:
+                    type: string
+                    format: binary
+                
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "please make sure all fields are filled in correctly",
+                    }      
+  
   #admin
   /admins/users:
     get:
