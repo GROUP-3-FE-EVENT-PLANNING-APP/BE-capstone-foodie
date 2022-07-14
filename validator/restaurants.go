@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var ErroHandlerEvent = func(err error, c echo.Context) {
+var ErroHandlerRestaurant = func(err error, c echo.Context) {
 
 	report, ok := err.(*echo.HTTPError)
 	if !ok {

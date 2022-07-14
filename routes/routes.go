@@ -14,6 +14,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e := echo.New()
 
 	e.HTTPErrorHandler = _validatorUser.ErrorHandlerUser
+	e.HTTPErrorHandler = _validatorUser.ErroHandlerRestaurant
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
@@ -28,6 +29,9 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("/users", presenter.UserPresenter.PutUser, _middleware.JWTMiddleware())
 	e.GET("/myprofile", presenter.UserPresenter.GetByMe, _middleware.JWTMiddleware())
 	e.DELETE("/users", presenter.UserPresenter.DeleteByID, _middleware.JWTMiddleware())
+
+	// restaurants
+	e.POST("/restaurants", presenter.RestaurantPresenter.CreateResto, _middleware.JWTMiddleware())
 
 	return e
 
