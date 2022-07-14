@@ -1,0 +1,1166 @@
+openapi: "3.0.0"
+info:
+  title: Wisata Foodie
+  description: open api wisata foodie
+  version: 1.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/dpurbosakti/wisatafoodie/1.0.0
+  - url: 54.197.118.126
+tags:
+  - name: Authentication
+  - name: Users
+  - name: Favourites
+  - name: Restaurants
+  - name: Admins
+  - name: Comments
+
+  
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      description: fitur untuk login ke sistem
+      requestBody:
+         content:
+            multipart/form-data:
+              schema:
+                type: object
+              examples:
+                request user:
+                  value:                 
+                    email: "dwi@mail.com"
+                    password: "qwerty"
+
+                request admin:
+                  value:                 
+                    email: "admin@mail.com"
+                    password: "qwerty"
+
+
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseLoginSuccess"
+              examples:
+                response user:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "Login Success",
+                      data:
+                        {
+                          avatarUrl: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                          id: 1,
+                          name: "dwiatmoko",
+                          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co",
+                          role: "user",
+                          handphone: "085608560856",
+                          email: "user@mail.com"
+                        },
+                    }
+                response admin:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "Login Success",
+                      data:
+                        {
+                          avatarUrl: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                          id: 2,
+                          name: "dwiatmoko",
+                          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co",
+                          role: "admin",
+                          handphone: "085708570857",
+                          email: "admin@mail.com"
+                        },
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "email or password incorrect",
+                    }
+  #users
+  /users:
+    post:
+      tags:
+        - Users
+      description: fitur untuk registrasi/buat data user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, email, password, handphone]
+              properties:
+                name:
+                  type: string                  
+                email:
+                  type: string
+                password:
+                  type: string
+                handphone:
+                  type: string
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response success:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "success operation create data",
+                    }
+            image/png:
+                  schema:
+                    type: string
+                    format: binary
+                
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "please make sure all fields are filled in correctly",
+                    }
+    put:
+      tags:
+        - Users
+      description: fitur untuk update data user
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string                  
+                email:
+                  type: string
+                password:
+                  type: string
+                handphone:
+                  type: string
+                avatar_url:
+                  type: string
+                  format: binary
+            encoding:
+              avatar_url: # Property name
+                contentType: image/png, image/jpeg
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
+    delete:
+      tags:
+        - Users
+      description: fitur untuk menghapus user
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: iduser
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
+                 
+  /myprofile:
+    get:
+      tags:
+        - Users
+      description: fitur untuk melihat profil saya
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    {
+                      name: "dwi",
+                      email: "dwi@gmail.com",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      handphone: "085608560856",
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+
+  #favourites
+  /favourites/{idrestaurant}:
+    post:
+      tags:
+        - Favourites
+      description: fitur untuk menambahkan restaurant ke daftar favorit
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk menambahkan restaurant ke daftar favorit
+      security:
+      - JWTAuth: []
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Success add restaurant to favourites"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
+                  
+
+    delete:
+      tags:
+        - Favourites
+      description: fitur untuk melihat restaurant yg ada di daftar favorit
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk delete restaurant dari daftar favorit
+      security:
+      - JWTAuth: []
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }    
+  /favourites:
+    get:
+      tags:
+        - Favourites
+      description: fitur untuk melihat restaurant yg ada di daftar favorit
+      security:
+      - JWTAuth: []
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value:
+                    [{
+                      resto_id: 1,
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "halal",
+                      resto_name: "depot puas",
+                      location: "surabaya"
+                    }
+                    ,
+                    { 
+                      resto_id: 2,
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "halal",
+                      resto_name: "depot puas",
+                      location: "surabaya"
+                    }
+                    ]
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" } 
+                             
+  #restaurants
+  /restaurants:
+    post:
+      tags:
+        - Restaurants
+      description: fitur untuk registrasi/buat data restaurant
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [resto_image_url, resto_name, location, menu_image_url, facility, category, table_quota, booking_fee, latitude, longitude]
+              properties:
+                resto_image_url:
+                  type: array
+                  items: 
+                    type: string
+                    format: binary
+                resto_name:
+                  type: string
+                location:      
+                  type: string
+                menu_image_url:
+                  type: string
+                  format: binary
+                facility:
+                  type: string
+                category:
+                  type: string
+                table_quota:
+                  type: integer
+                booking_fee:
+                  type: integer
+                latitude:
+                  type: string
+                longitude:
+                  type: string
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response success:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "success operation create data",
+                    }
+            image/png:
+                  schema:
+                    type: string
+                    format: binary
+                
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "please make sure all fields are filled in correctly",
+                    }
+    put:
+      tags:
+        - Restaurants
+      description: fitur untuk update data restaurant
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                resto_image_url:
+                  type: array
+                  items: 
+                    type: string
+                    format: binary
+                resto_name:
+                  type: string
+                location:      
+                  type: string
+                menu_image_url:
+                  type: string
+                  format: binary
+                facility:
+                  type: string
+                category:
+                  type: string
+                table_quota:
+                  type: integer
+                booking_fee:
+                  type: integer
+                latitude:
+                  type: string
+                longitude:
+                  type: string
+            encoding:
+              avatar_url: # Property name
+                contentType: image/png, image/jpeg
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
+    
+    delete:
+      tags:
+        - Restaurants
+      description: fitur untuk menghapus restaurant
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
+    get:
+      tags:
+        - Restaurants
+      description: fitur untuk melihat seluruh resto yang sudah terverifikasi
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return 
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value:
+                    [{
+                      resto_id: 1,
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "halal",
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      facility: ["mushollah", "wc", "karaoke"],
+                      table_quota: 30,
+                      booking_fee: 50000,
+                      rating: 4,
+                      comment: ["bagus", "bersih"],
+                      latitude: "-33.8431937",
+                      longitude: "149.8135021",
+                      status: "verified"
+                    }
+                    ,
+                    { 
+                      resto_id: 2,
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "halal",
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      facility: ["mushollah", "wc", "karaoke"],
+                      table_quota: 30,
+                      booking_fee: 50000,
+                      rating: 4,
+                      comment: ["bagus", "bersih"],
+                      latitude: "-33.8431937",
+                      longitude: "149.8135021",
+                      status: "verified"
+                      
+                    }
+                    ]
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }                          
+
+  /restaurants/{idrestaurant}:                
+    get:
+      tags:
+        - Restaurants
+      description: fitur untuk melihat detail restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk melihat detail restaurant
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value:
+                    {
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "halal",
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      facility: ["mushollah", "wc", "karaoke"],
+                      table_quota: 30,
+                      booking_fee: 50000,
+                      rating: 4,
+                      comment: ["bagus", "bersih"],
+                      latitude: "-33.8431937",
+                      longitude: "149.8135021"
+                      
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }             
+  /myresto:
+    get:
+      tags:
+        - Restaurants
+      description: fitur untuk melihat resto yang kita miliki
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 
+                  value:
+                   {
+                      resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      rating: 4,
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      category: "halal",
+                      status: "verified"
+                    }
+                    
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+  
+  /restaurants/booking:
+    post:
+      tags:
+        - Restaurants
+      description: fitur untuk booking restaurant
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [table_quota, date, time]
+              properties:
+                table_quota:
+                  type: integer
+                date:
+                  type: string
+                time:
+                  type: string
+                
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response success:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "success operation create data",
+                    }
+            image/png:
+                  schema:
+                    type: string
+                    format: binary
+                
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                response failed:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "please make sure all fields are filled in correctly",
+                    }                
+
+  #admin
+  /admins/users:
+    get:
+      tags:
+        - Admins
+      description: fitur untuk melihat seluruh user
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return     
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    [{
+                      name: "dwi",
+                      email: "dwi@mail.com",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      handphone: "085608560856",
+                    },
+                    {
+                      name: "syawal",
+                      email: "syawal@mail.com",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      handphone: "085608560857",
+                    }
+                    ]
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+
+  /admins/restaurants:
+    get:
+      tags:
+        - Admins
+      description: fitur untuk melihat seluruh restaurants
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return     
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    [{
+                      resto_id: 1,
+                      resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      rating: 4,
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      status: "unverified",
+                      category: "halal"
+                      
+                    }
+                    ,
+                    { 
+                       resto_id: 2,
+                      resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      rating: 3,
+                      resto_name: "depot nikmat",
+                      location: "surabaya",
+                      status: "verified",
+                      category: "halal"
+                      
+                    }
+                    ]   
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }  
+  /admins/restaurants/{idrestaurant}:
+    post:
+      tags:
+        - Admins
+      description: fitur untuk melihat detail dan berkas restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk verifikasi restaurant  
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                     {
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      owner_name: "dwi",
+                      file: "https://gudanggroup3.s3.amazonaws.com/surat-penawaran-kerjasama-tujuh.jpg",
+                      resto_name: "depot puas",
+                      email: dwi@mail.com,
+                      handphone: "085608560856",
+                      facility: ["mushollah", "wc", "karaoke"],
+                      category: "halal",
+                      table_quota: 30,
+                      booking_fee: 50000,
+                      location: "surabaya",
+                      latitude: "-33.8431937",
+                      longitude: "149.8135021"
+                      
+                    }  
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }                  
+  #comments & rating
+  /comments/{idrestaurant}:
+    post:
+        tags:
+          - Comments
+        description: fitur untuk menambahkan komen dan rating
+        parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk menambahkan komen
+        security:
+        - JWTAuth: []
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string 
+                  rating:
+                    type: integer
+
+        responses:
+          "200":
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/responseLoginSuccess"
+                examples:
+                  response user:
+                    description: response success 1
+                    value:
+                      {
+                        code: 200,
+                        status: "success",
+                        message: "success add comment and rating"
+                      }
+                  
+          "400":
+            description: Failed Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/failedResponse"
+                examples:
+                  response failed:
+                    description: response failed 1
+                    value:
+                      {
+                        code: 400,
+                        status: "failed",
+                        message: "failed to add comment and rating",
+                      }
+  
+    get:
+        tags:
+          - Comments
+        description: fitur untuk melihat semua komen dalam 1 restaurant
+        parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk melihat semua komen dalam 1 restaurant
+        responses:
+          "200":
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  $ref: "#"
+                example:
+                      [{
+                        name: "dwi",
+                        avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                        comment: "tempatnya bagus"
+                      },
+                      {
+                      name: "syawal",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      comment: "tempatnya menarik"
+                      }
+                      ]
+          "400":
+            description: Failed Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/failedResponse"
+                examples:
+                  response failed:
+                    description: response failed 1
+                    value:
+                      {
+                        code: 400,
+                        status: "failed",
+                        message: "failed to add comment and rating",
+                      }    
+
+  /comments/rating/{idrestaurant}:
+    get:
+      tags:
+        - Comments
+      description: fitur untuk melihat rating restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk melihat rating dalam 1 restaurant
+      responses:
+          "200":
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: "#"
+                example:
+                      {
+                      rating: 2
+                      }
+          "400":
+            description: Failed Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/failedResponse"
+                examples:
+                  response failed:
+                    description: response failed 1
+                    value:
+                      {
+                        code: 400,
+                        status: "failed",
+                        message: "failed to add comment and rating",
+                      } 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+    responseLoginSuccess:
+      type: object
+      properties:
+        {
+          "code": { type: number },
+          "message": { type: string },
+          "status": { type: string },
+          "data": { type: object },
+        }
+    failedResponse:
+      type: object
+      properties:
+        {
+          "code": { type: number },
+          "message": { type: string },
+          "status": { type: string },
+        }
