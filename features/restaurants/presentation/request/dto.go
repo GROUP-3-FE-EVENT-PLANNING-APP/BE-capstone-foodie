@@ -11,10 +11,11 @@ type Restaurant struct {
 	Category     string `json:"category" form:"category" validate:"required"`
 	TableQuota   uint   `json:"table_quota" form:"table_quota" validate:"required,number"`
 	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" validate:"required,number"`
-	Lat          string `json:"lat" form:"lat" validate:"required"`
-	Long         string `json:"long" form:"long" validate:"required"`
+	Latitude     string `json:"latitude" form:"latitude" validate:"required"`
+	Longitude    string `json:"longitude" form:"longitude" validate:"required"`
 	Status       string `json:"status" form:"status" validate:"required"`
 	UserId       int    `json:"user_id" form:"user_id"`
+	Facility     string `json:"facility" form:"facility" validate:"required"`
 }
 
 func ToCore(req Restaurant) restaurants.Core {
@@ -25,9 +26,10 @@ func ToCore(req Restaurant) restaurants.Core {
 		Category:     req.Category,
 		TableQuota:   req.TableQuota,
 		BookingFee:   req.BookingFee,
-		Lat:          req.Lat,
-		Long:         req.Long,
+		Latitude:     req.Latitude,
+		Longitude:    req.Longitude,
 		Status:       req.Status,
+		Facility:     req.Facility,
 		User: restaurants.User{
 			ID: req.UserId,
 		},

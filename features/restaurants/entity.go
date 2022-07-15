@@ -13,9 +13,10 @@ type Core struct {
 	Category     string
 	TableQuota   uint
 	BookingFee   uint64
-	Lat          string
-	Long         string
+	Latitude     string
+	Longitude    string
 	Status       string
+	Facility     string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }

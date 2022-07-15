@@ -18,9 +18,21 @@ type Restaurant struct {
 	Category     string `json:"category" form:"category" gorm:"not null; type:varchar(100)"`
 	TableQuota   uint   `json:"table_quota" form:"table_quota" gorm:"not null; type:integer"`
 	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" gorm:"not null; type:bigint(20)"`
-	Lat          string `json:"lat" form:"lat" gorm:"not null; type:varchar(255)"`
-	Long         string `json:"long" form:"long" gorm:"not null; type:varchar(255)"`
+	Latitude     string `json:"latitude" form:"latitude" gorm:"not null; type:varchar(255)"`
+	Longitude    string `json:"longitude" form:"longitude" gorm:"not null; type:varchar(255)"`
 	Status       string `json:"status" form:"status" gorm:"not null; type:varchar(100); default:unverification"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
+	Facilities   []Facility     `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
+}
+
+type Facility struct {
+	// gorm.Model
+	ID           uint `gorm:"primaryKey;autoIncrement"`
+	RestaurantID uint `json:"restaurant_id" form:"restaurant_id"`
+	Restaurant   Restaurant
+	Facility     string `json:"facility" form:"facility" gorm:"not null; type:varchar(255);"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
@@ -47,8 +59,8 @@ func (data *Restaurant) toCore() restaurants.Core {
 		Category:     data.Category,
 		TableQuota:   data.TableQuota,
 		BookingFee:   data.BookingFee,
-		Lat:          data.Lat,
-		Long:         data.Long,
+		Latitude:     data.Latitude,
+		Longitude:    data.Longitude,
 		Status:       data.Status,
 		CreatedAt:    data.CreatedAt,
 		UpdatedAt:    data.UpdatedAt,
@@ -71,8 +83,8 @@ func fromCore(core restaurants.Core) Restaurant {
 		Category:     core.Category,
 		TableQuota:   core.TableQuota,
 		BookingFee:   core.BookingFee,
-		Lat:          core.Lat,
-		Long:         core.Long,
+		Latitude:     core.Latitude,
+		Longitude:    core.Longitude,
 		Status:       core.Status,
 		UserID:       uint(core.User.ID),
 	}

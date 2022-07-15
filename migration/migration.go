@@ -10,4 +10,5 @@ import (
 func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_mUsers.User{})
 	db.AutoMigrate(&_mRestaurants.Restaurant{})
+	db.AutoMigrate(&_mRestaurants.Facility{})
 }

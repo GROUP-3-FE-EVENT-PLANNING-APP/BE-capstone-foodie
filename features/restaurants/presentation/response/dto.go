@@ -13,8 +13,8 @@ type Restaurant struct {
 	Category     string    `json:"category" form:"category"`
 	TableQuota   uint      `json:"table_quota" form:"table_quota"`
 	BookingFee   uint64    `json:"booking_fee" form:"booking_fee"`
-	Lat          string    `json:"lat" form:"lat"`
-	Long         string    `json:"long" form:"long"`
+	Latitude     string    `json:"latitude" form:"latitude"`
+	Longitude    string    `json:"longitude" form:"longitude"`
 	Status       string    `json:"status" form:"status"`
 	CreatedAt    time.Time `json:"created_at" form:"created_at"`
 	User         User      `json:"user" form:"user"`
@@ -35,8 +35,8 @@ func FromCore(data restaurants.Core) Restaurant {
 		Category:     data.Category,
 		TableQuota:   data.TableQuota,
 		BookingFee:   data.BookingFee,
-		Lat:          data.Lat,
-		Long:         data.Long,
+		Latitude:     data.Latitude,
+		Longitude:    data.Longitude,
 		Status:       data.Status,
 		CreatedAt:    data.CreatedAt,
 		User: User{
