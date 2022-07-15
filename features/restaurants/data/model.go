@@ -21,6 +21,7 @@ type Restaurant struct {
 	Latitude     string `json:"latitude" form:"latitude" gorm:"not null; type:varchar(255)"`
 	Longitude    string `json:"longitude" form:"longitude" gorm:"not null; type:varchar(255)"`
 	Status       string `json:"status" form:"status" gorm:"not null; type:varchar(100); default:unverification"`
+	FileImageUrl string `json:"file_image_url" form:"file_image_url" gorm:"not null; type:varchar(255)"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
@@ -62,6 +63,7 @@ func (data *Restaurant) toCore() restaurants.Core {
 		Latitude:     data.Latitude,
 		Longitude:    data.Longitude,
 		Status:       data.Status,
+		FileImageUrl: data.FileImageUrl,
 		CreatedAt:    data.CreatedAt,
 		UpdatedAt:    data.UpdatedAt,
 	}
@@ -86,6 +88,7 @@ func fromCore(core restaurants.Core) Restaurant {
 		Latitude:     core.Latitude,
 		Longitude:    core.Longitude,
 		Status:       core.Status,
+		FileImageUrl: core.FileImageUrl,
 		UserID:       uint(core.User.ID),
 	}
 }

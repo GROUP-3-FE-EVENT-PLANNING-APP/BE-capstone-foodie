@@ -32,6 +32,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 
 	// restaurants
 	e.POST("/restaurants", presenter.RestaurantPresenter.CreateResto, _middleware.JWTMiddleware())
+	e.PUT("/restaurants", presenter.RestaurantPresenter.UpdateResto, _middleware.JWTMiddleware())
 
 	return e
 
