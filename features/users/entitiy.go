@@ -17,7 +17,7 @@ type Core struct {
 
 type Business interface {
 	CreateData(input Core) (row int, err error)
-	LoginUser(authData AuthRequestData) (id int, token, name, avatarUrl, role, handphone, email string, err error)
+	LoginUser(authData AuthRequestData) (data map[string]interface{}, err error)
 	UpdateData(input Core, idFromToken int) (row int, err error)
 	GetUserByMe(idFromToken int) (data Core, err error)
 	DeleteDataById(idFromToken int) (row int, err error)
@@ -25,7 +25,7 @@ type Business interface {
 
 type Data interface {
 	InsertData(input Core) (row int, err error)
-	LoginUserDB(authData AuthRequestData) (id int, token, name, avatarUrl, role, handphone, email string, err error)
+	LoginUserDB(authData AuthRequestData) (data map[string]interface{}, err error)
 	UpdateDataDB(data map[string]interface{}, idFromToken int) (row int, err error)
 	SelectDataByMe(idFromToken int) (data Core, err error)
 	DeleteDataByIdDB(idFromToken int) (row int, err error)

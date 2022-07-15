@@ -26,9 +26,9 @@ func (uc *userUseCase) CreateData(input users.Core) (row int, err error) {
 	return row, err
 }
 
-func (uc *userUseCase) LoginUser(authData users.AuthRequestData) (id int, token, name, avatarUrl, role, handphone, email string, err error) {
-	id, token, name, avatarUrl, role, handphone, email, err = uc.userData.LoginUserDB(authData)
-	return id, token, name, avatarUrl, role, handphone, email, err
+func (uc *userUseCase) LoginUser(authData users.AuthRequestData) (data map[string]interface{}, err error) {
+	data, err = uc.userData.LoginUserDB(authData)
+	return data, err
 }
 
 func (uc *userUseCase) UpdateData(input users.Core, idFromToken int) (row int, err error) {

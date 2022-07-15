@@ -30,16 +30,17 @@ func CreateToken(userId int, avatarUrl, role, handphone, email string) (string, 
 	return token.SignedString([]byte(os.Getenv("SecretJWT")))
 }
 
-func ExtractToken(e echo.Context) (int, string, string, string, string, error) {
+func ExtractToken(e echo.Context) (data map[string]interface{}, err error) {
 	user := e.Get("user").(*jwt.Token)
+	var dataToken = map[string]interface{}{}
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
-		userId := claims["userId"].(float64)
-		avatarUrl := claims["avatarUrl"].(string)
-		role := claims["role"].(string)
-		handphone := claims["handphone"].(string)
-		email := claims["email"].(string)
-		return int(userId), avatarUrl, role, handphone, email, nil
+		dataToken["userId"] = claims["userId"].(float64)
+		dataToken["avatarUrl"] = claims["avatarUrl"].(string)
+		dataToken["role"] = claims["role"].(string)
+		dataToken["handphone"] = claims["handphone"].(string)
+		dataToken["email"] = claims["email"].(string)
+		return dataToken, nil
 	}
-	return 0, "Avatar link not found", "you dont have any role", "you dont have any number stored", "no email registered", fmt.Errorf("token invalid")
+	return nil, fmt.Errorf("token invalid")
 }

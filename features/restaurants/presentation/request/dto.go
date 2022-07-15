@@ -13,7 +13,7 @@ type Restaurant struct {
 	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" validate:"required,number"`
 	Latitude     string `json:"latitude" form:"latitude" validate:"required"`
 	Longitude    string `json:"longitude" form:"longitude" validate:"required"`
-	Status       string `json:"status" form:"status" validate:"required"`
+	Status       string `json:"status" form:"status" `
 	UserId       int    `json:"user_id" form:"user_id"`
 	Facility     string `json:"facility" form:"facility" validate:"required"`
 }
