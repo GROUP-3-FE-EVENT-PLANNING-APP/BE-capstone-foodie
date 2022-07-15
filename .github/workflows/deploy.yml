@@ -17,10 +17,10 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/ubuntu/project-group3
+            cd /home/ubuntu/BE-capstone-foodie
             git pull origin main
             docker stop capstoneContainer
             docker rm capstoneContainer
             docker rmi capstone-api
             docker build -t capstone-api:latest .
-            docker run -d -p 80:80 --name capstone capstone-api:latest
+            docker run -d -p 80:80 --name capstoneContainer capstone-api:latest
