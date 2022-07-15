@@ -33,6 +33,11 @@ func New(presenter factory.Presenter) *echo.Echo {
 	// restaurants
 	e.POST("/restaurants", presenter.RestaurantPresenter.CreateResto, _middleware.JWTMiddleware())
 
+	// comments and ratings
+	e.POST("/comments/:id", presenter.CommentPresenter.PostComment, _middleware.JWTMiddleware())
+	e.GET("/comments/:id", presenter.CommentPresenter.GetComment)
+	e.GET("/comments/rating/:id", presenter.CommentPresenter.GetRating)
+
 	return e
 
 }
