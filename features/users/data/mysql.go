@@ -37,28 +37,35 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 	return int(resultcreate.RowsAffected), nil
 }
 
-func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (id int, token, name, avatarUrl, role, handphone, email string, err error) {
+func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (data map[string]interface{}, err error) {
 	userData := User{}
 	result := repo.DB.Where("email = ?", authData.Email).First(&userData)
 	if result.Error != nil {
-		return 0, "", "", "", "", "", "", result.Error
+		return nil, result.Error
 	}
 
 	if result.RowsAffected != 1 {
-		return 0, "", "", "", "", "", "", errors.New("failed to login")
+		return nil, errors.New("failed to login")
 	}
 
 	errCrypt := _bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(authData.Password))
 	if errCrypt != nil {
-		return 0, "", "", "", "", "", "", errors.New("password incorrect")
+		return nil, errors.New("password incorrect")
 	}
 
 	token, errToken := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
 	if errToken != nil {
-		return 0, "", "", "", "", "", "", errToken
+		return nil, errToken
 	}
-
-	return int(userData.ID), token, userData.Name, userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email, nil
+	var dataToken = map[string]interface{}{}
+	dataToken["id"] = int(userData.ID)
+	dataToken["token"] = token
+	dataToken["name"] = userData.Name
+	dataToken["avatarUrl"] = userData.AvatarUrl
+	dataToken["role"] = userData.Role
+	dataToken["handphone"] = userData.Handphone
+	dataToken["email"] = userData.Email
+	return dataToken, nil
 }
 
 func (repo *mysqlUserRepository) UpdateDataDB(data map[string]interface{}, idFromToken int) (row int, err error) {

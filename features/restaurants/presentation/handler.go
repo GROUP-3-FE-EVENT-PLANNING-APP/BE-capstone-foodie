@@ -73,7 +73,8 @@ func (h *RestaurantHandler) CreateResto(c echo.Context) error {
 	}
 
 	// ekstrak token
-	idToken, _, _, _, _, errToken := _middlewares.ExtractToken(c)
+	data, errToken := _middlewares.ExtractToken(c)
+	idToken := data["userId"].(float64)
 
 	// return jika errorToken
 	if errToken != nil {
@@ -81,7 +82,7 @@ func (h *RestaurantHandler) CreateResto(c echo.Context) error {
 	}
 
 	// inissialisasi newResto.UserId = idToken(userid)
-	newResto.UserId = idToken
+	newResto.UserId = int(idToken)
 	//
 	newResto.MenuImageUrl = url
 
