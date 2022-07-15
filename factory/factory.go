@@ -5,11 +5,16 @@ import (
 	_userData "capstone/group3/features/users/data"
 	_userPresentation "capstone/group3/features/users/presentation"
 
+	_restaurantBusiness "capstone/group3/features/restaurants/business"
+	_restaurantData "capstone/group3/features/restaurants/data"
+	_restaurantPresentation "capstone/group3/features/restaurants/presentation"
+
 	"gorm.io/gorm"
 )
 
 type Presenter struct {
-	UserPresenter *_userPresentation.UserHandler
+	UserPresenter       *_userPresentation.UserHandler
+	RestaurantPresenter *_restaurantPresentation.RestaurantHandler
 }
 
 func InitFactory(dbConn *gorm.DB) Presenter {
@@ -18,7 +23,12 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	userBusiness := _userBusiness.NewUserBusiness(userData)
 	userPresentation := _userPresentation.NewUserHandler(userBusiness)
 
+	restaurantData := _restaurantData.NewRestaurantRepository(dbConn)
+	restaurantBusiness := _restaurantBusiness.NewRestaurantBusiness(restaurantData)
+	restaurantPresentation := _restaurantPresentation.NewRestaurantHandler(restaurantBusiness)
+
 	return Presenter{
-		UserPresenter: userPresentation,
+		UserPresenter:       userPresentation,
+		RestaurantPresenter: restaurantPresentation,
 	}
 }
