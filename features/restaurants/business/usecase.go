@@ -36,3 +36,35 @@ func (uc *restaurantUseCase) DetailImageRestoBusiness(id int) (imageMenu, imageF
 
 	return imageMenu, imageFile, err
 }
+
+func (uc *restaurantUseCase) DeleteRestoBusiness(idUser int) (row int, err error) {
+	row, err = uc.restaurantData.DeleteRestoData(idUser)
+
+	return row, err
+}
+
+func (uc *restaurantUseCase) UploadImageRestoBusiness(newData restaurants.RestoImage) (response int, err error) {
+	response, err = uc.restaurantData.UploadImageRestoData(newData)
+
+	return response, err
+}
+
+func (uc *restaurantUseCase) AllRestoBusiness(limit, offset int) (response []restaurants.CoreList, err error) {
+	response, err = uc.restaurantData.AllRestoData(limit, offset)
+
+	if err == nil {
+		for i := 0; i < len(response); i++ {
+
+			// get rating
+			rating, _ := uc.restaurantData.RatingData(response[i].ID)
+			response[i].Rating = rating
+
+			// get resto image url
+			restoImg, _ := uc.restaurantData.RestoImageData(response[i].ID)
+
+			response[i].RestoImages = append(response[i].RestoImages, restaurants.RestoImage{RestoImageUrl: restoImg})
+		}
+	}
+
+	return response, err
+}

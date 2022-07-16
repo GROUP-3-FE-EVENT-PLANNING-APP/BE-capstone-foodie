@@ -3,8 +3,11 @@ package presentation
 import (
 	"capstone/group3/features/restaurants"
 	_requestRestaurant "capstone/group3/features/restaurants/presentation/request"
+	_responseRestaurant "capstone/group3/features/restaurants/presentation/response"
+	"fmt"
 
-	// _responseRestaurant "capstone/group3/features/restaurants/presentation/response"
+	"strconv"
+
 	_middlewares "capstone/group3/features/middlewares"
 	_helper "capstone/group3/helper"
 
@@ -230,4 +233,96 @@ func (h *RestaurantHandler) UpdateResto(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
+}
+
+func (h *RestaurantHandler) DestroyResto(c echo.Context) error {
+	// ekstrak token
+	data, errToken := _middlewares.ExtractToken(c)
+	idToken := data["userId"].(float64)
+
+	if errToken != nil {
+		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("invalid token"))
+	}
+
+	_, err := h.RestaurantBusiness.DeleteRestoBusiness(int(idToken))
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data"))
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
+}
+
+func (h *RestaurantHandler) UploadImageResto(c echo.Context) error {
+	var newImage _requestRestaurant.RestoImage
+
+	// menu image url
+	fileData, fileInfo, fileErr := c.Request().FormFile("resto_image_url")
+
+	// return err jika missing file
+	if fileErr == http.ErrMissingFile || fileErr != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get file"))
+	}
+
+	uploadImage, errUploadImage := _helper.UploadImage(fileData, fileInfo)
+
+	if errUploadImage != nil {
+		if errUploadImage.Error() == "failed to get file" {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get file"))
+		}
+
+		if errUploadImage.Error() == "file extension error" {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("file extension error"))
+		}
+
+		if errUploadImage.Error() == "file size error" {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("file size error"))
+		}
+
+		if errUploadImage.Error() == "failed to upload file" {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to upload file"))
+		}
+	}
+
+	// ekstrak token
+	data, errToken := _middlewares.ExtractToken(c)
+	idToken := data["userId"].(float64)
+
+	// return jika errorToken
+	if errToken != nil {
+		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("invalid token"))
+	}
+
+	newImage.UserId = int(idToken)
+	newImage.RestoImageUrl = uploadImage
+
+	dataImage := _requestRestaurant.ToCoreRestoImage(newImage)
+	_, err := h.RestaurantBusiness.UploadImageRestoBusiness(dataImage)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to upload data"))
+
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
+
+}
+
+func (h *RestaurantHandler) AllResto(c echo.Context) error {
+	limit := c.QueryParam("limit")
+	offset := c.QueryParam("offset")
+
+	limitint, _ := strconv.Atoi(limit)
+	offsetint, _ := strconv.Atoi(offset)
+
+	result, err := h.RestaurantBusiness.AllRestoBusiness(limitint, offsetint)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get all data"))
+	}
+
+	fmt.Println(result[0].RestoImages[0].RestoImageUrl)
+
+	// return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", result))
+	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreList(result)))
 }

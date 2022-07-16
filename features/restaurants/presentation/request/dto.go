@@ -19,6 +19,11 @@ type Restaurant struct {
 	Facility     string `json:"facility" form:"facility" validate:"required"`
 }
 
+type RestoImage struct {
+	UserId        int    `json:"user_id" form:"user_id"`
+	RestoImageUrl string `json:"resto_image_url" form:"resto_image_url"`
+}
+
 func ToCore(req Restaurant) restaurants.Core {
 	return restaurants.Core{
 		RestoName:    req.RestoName,
@@ -35,5 +40,12 @@ func ToCore(req Restaurant) restaurants.Core {
 		User: restaurants.User{
 			ID: req.UserId,
 		},
+	}
+}
+
+func ToCoreRestoImage(req RestoImage) restaurants.RestoImage {
+	return restaurants.RestoImage{
+		RestoImageUrl: req.RestoImageUrl,
+		UserID:        req.UserId,
 	}
 }
