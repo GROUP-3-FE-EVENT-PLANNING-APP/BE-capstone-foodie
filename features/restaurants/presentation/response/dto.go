@@ -20,6 +20,20 @@ type Restaurant struct {
 	User         User      `json:"user" form:"user"`
 }
 
+type Restaurant_ struct {
+	ID          int     `json:"id" form:"id"`
+	RestoName   string  `json:"resto_name" form:"resto_name"`
+	Location    string  `json:"location" form:"location"`
+	Category    string  `json:"category" form:"category"`
+	TableQuota  uint    `json:"table_quota" form:"table_quota"`
+	Rating      float64 `json:"rating" form:"rating"`
+	RestoImages []RestoImage
+}
+
+type RestoImage struct {
+	RestoImageUrl string `json:"resto_image_url"`
+}
+
 type User struct {
 	ID        int    `json:"id"`
 	Name      string `json:"name"`
@@ -47,10 +61,45 @@ func FromCore(data restaurants.Core) Restaurant {
 	}
 }
 
-func FromCoreList(data []restaurants.Core) []Restaurant {
-	result := []Restaurant{}
+func FromCoreAll(data restaurants.CoreList) Restaurant_ {
+	// result := RestoImage{}
+
+	// for _, v := range data.RestoImages {
+	// 	// fmt.Println(v.RestoImageUrl)
+	// 	result = append(result, v.RestoImageUrl)
+	// }
+
+	return Restaurant_{
+		ID:          data.ID,
+		RestoName:   data.RestoName,
+		Location:    data.Location,
+		Category:    data.Category,
+		TableQuota:  data.TableQuota,
+		Rating:      data.Rating,
+		RestoImages: FromRestoImageCoreList(data.RestoImages),
+		// RestoImageUrl: data.RestoImages[0].RestoImageUrl,
+		// RestoImages:   data.RestoImages{RestoImageUrl: data.RestoImageUrl},
+	}
+}
+
+func FromRestoImageCore(data restaurants.RestoImage) RestoImage {
+	return RestoImage{
+		RestoImageUrl: data.RestoImageUrl,
+	}
+}
+
+func FromRestoImageCoreList(data []restaurants.RestoImage) []RestoImage {
+	result := []RestoImage{}
 	for key := range data {
-		result = append(result, FromCore(data[key]))
+		result = append(result, FromRestoImageCore(data[key]))
+	}
+	return result
+}
+
+func FromCoreList(data []restaurants.CoreList) []Restaurant_ {
+	result := []Restaurant_{}
+	for key := range data {
+		result = append(result, FromCoreAll(data[key]))
 	}
 	return result
 }
