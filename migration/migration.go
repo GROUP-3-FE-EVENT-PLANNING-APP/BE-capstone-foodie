@@ -13,6 +13,7 @@ func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_mUsers.User{})
 	db.AutoMigrate(&_mRestaurants.Restaurant{})
 	db.AutoMigrate(&_mRestaurants.Facility{})
+	db.AutoMigrate(&_mRestaurants.RestoImage{})
 	db.AutoMigrate(&_mComments.Comments_Ratings{})
 	db.AutoMigrate(&_mFavourites.Favourite{})
 }

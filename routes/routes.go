@@ -32,6 +32,12 @@ func New(presenter factory.Presenter) *echo.Echo {
 
 	// restaurants
 	e.POST("/restaurants", presenter.RestaurantPresenter.CreateResto, _middleware.JWTMiddleware())
+	e.PUT("/restaurants", presenter.RestaurantPresenter.UpdateResto, _middleware.JWTMiddleware())
+	e.DELETE("/restaurants", presenter.RestaurantPresenter.DestroyResto, _middleware.JWTMiddleware())
+	e.POST("/restaurants/upload", presenter.RestaurantPresenter.UploadImageResto, _middleware.JWTMiddleware())
+	e.GET("/restaurants", presenter.RestaurantPresenter.AllResto)
+	e.GET("/restaurants/:id", presenter.RestaurantPresenter.DetailResto)
+	e.GET("/myresto", presenter.RestaurantPresenter.MyResto, _middleware.JWTMiddleware())
 
 	// comments and ratings
 	e.POST("/comments/:id", presenter.CommentPresenter.PostComment, _middleware.JWTMiddleware())
@@ -42,6 +48,11 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.POST("/favourites/:id", presenter.FavouritePresenter.PostFav, _middleware.JWTMiddleware())
 	e.DELETE("/favourites/:id", presenter.FavouritePresenter.DeleteFav, _middleware.JWTMiddleware())
 	e.GET("/favourites", presenter.FavouritePresenter.MyFav, _middleware.JWTMiddleware())
+	// admin
+	e.GET("/admins/users", presenter.AdminPresenter.AllUser, _middleware.JWTMiddleware())
+	e.GET("/admins/restaurants", presenter.AdminPresenter.AllResto, _middleware.JWTMiddleware())
+	e.GET("/admins/restaurants/:id", presenter.AdminPresenter.DetailResto, _middleware.JWTMiddleware())
+	e.POST("/admins/verif/:id", presenter.AdminPresenter.VerifResto, _middleware.JWTMiddleware())
 
 	return e
 
