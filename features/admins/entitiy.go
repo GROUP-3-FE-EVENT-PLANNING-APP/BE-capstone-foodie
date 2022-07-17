@@ -59,6 +59,7 @@ type Business interface {
 	AllUserBusiness(limit, offset, idUser int) (result []Core, err error)
 	AllRestoBusiness(limit, offset, idUser int) (result []CoreRestaurant, err error)
 	DetailRestoBusiness(id int, idUser int) (result CoreDetailRestaurant, err error)
+	VerifRestoBusiness(id int, idUser int) (result int, err error)
 }
 
 type Data interface {
@@ -69,4 +70,5 @@ type Data interface {
 	DetailRestoData(id int, idUser int) (result CoreDetailRestaurant, err error)
 	RestoImagesData(idResto int) (result []string, err error)
 	FacilitiesData(idResto int) (result []string, err error)
+	VerifRestoData(id int, idUser int) (result int, err error)
 }

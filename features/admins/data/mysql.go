@@ -158,3 +158,29 @@ func (repo *mysqlAdminRepository) DetailRestoData(id, idUser int) (response admi
 
 	return dataResto.toCoreDetail(), nil
 }
+
+func (repo *mysqlAdminRepository) VerifRestoData(id, idUser int) (response int, err error) {
+	var detaiUser User
+	// cek id login(role == admin)
+	resultCheck := repo.db.Table("users").Where("id = ?", idUser).First(&detaiUser)
+
+	if resultCheck.Error != nil {
+		return 0, resultCheck.Error
+	}
+
+	if detaiUser.Role != "admin" {
+		return 0, fmt.Errorf("not admin")
+	}
+
+	result := repo.db.Table("restaurants").Where("id = ?", id).Updates(Restaurant{Status: "verified"})
+
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("resto not found")
+	}
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return int(result.RowsAffected), nil
+}
