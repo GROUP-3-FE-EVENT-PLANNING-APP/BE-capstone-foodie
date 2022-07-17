@@ -148,7 +148,7 @@ func (repo *mysqlRestaurantRepository) UploadImageRestoData(input restaurants.Re
 func (repo *mysqlRestaurantRepository) AllRestoData(limit, offset int) (response []restaurants.CoreList, err error) {
 	var dataResto []Restaurant
 
-	result := repo.db.Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location, table_quota").Where("status = ?", "verification").Order("id desc").Limit(limit).Offset(offset).Find(&dataResto)
+	result := repo.db.Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location, table_quota").Where("status = ?", "verified").Order("id desc").Limit(limit).Offset(offset).Find(&dataResto)
 
 	if result.Error != nil {
 		return []restaurants.CoreList{}, result.Error

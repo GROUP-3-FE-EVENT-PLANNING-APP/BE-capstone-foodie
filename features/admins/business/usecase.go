@@ -65,3 +65,9 @@ func (uc *adminUseCase) DetailRestoBusiness(id, idUser int) (response admins.Cor
 
 	return response, err
 }
+
+func (uc *adminUseCase) VerifRestoBusiness(id, idUser int) (response int, err error) {
+	response, err = uc.adminData.VerifRestoData(id, idUser)
+
+	return response, err
+}

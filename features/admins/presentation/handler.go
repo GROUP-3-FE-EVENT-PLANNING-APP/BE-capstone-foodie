@@ -95,3 +95,30 @@ func (h *AdminHandler) DetailResto(c echo.Context) error {
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseAdmin.FromCoreDetail(result)))
 
 }
+
+func (h *AdminHandler) VerifResto(c echo.Context) error {
+	// ekstrak token
+	data, errToken := _middlewares.ExtractToken(c)
+	idToken := data["userId"].(float64)
+
+	id := c.Param("id")
+
+	idResto, _ := strconv.Atoi(id)
+
+	if errToken != nil {
+		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("invalid token"))
+	}
+
+	result, err := h.AdminBusiness.VerifRestoBusiness(idResto, int(idToken))
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to verificaton data"))
+	}
+
+	if result != 1 {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to verificaton data"))
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
+
+}
