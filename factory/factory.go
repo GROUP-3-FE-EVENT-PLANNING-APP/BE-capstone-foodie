@@ -13,15 +13,12 @@ import (
 	_commentData "capstone/group3/features/comments/data"
 	_commentPresentation "capstone/group3/features/comments/presentation"
 
-<<<<<<< HEAD
-	_favouriteBusiness "capstone/group3/features/favourites/business"
-	_favouriteData "capstone/group3/features/favourites/data"
-	_favouritePresentation "capstone/group3/features/favourites/presentation"
-=======
 	_adminBusiness "capstone/group3/features/admins/business"
 	_adminData "capstone/group3/features/admins/data"
 	_adminPresentation "capstone/group3/features/admins/presentation"
->>>>>>> 4882855d35667ca1be0b3d787e87aea188bd13f0
+	_favouriteBusiness "capstone/group3/features/favourites/business"
+	_favouriteData "capstone/group3/features/favourites/data"
+	_favouritePresentation "capstone/group3/features/favourites/presentation"
 
 	"gorm.io/gorm"
 )
@@ -48,24 +45,18 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	commentBusiness := _commentBusiness.NewCommentBusiness(commentData)
 	commentPresentation := _commentPresentation.NewCommentHandler(commentBusiness)
 
-<<<<<<< HEAD
 	favouriteData := _favouriteData.NewFavouriteRepository(dbConn)
 	favouriteBusiness := _favouriteBusiness.NewFavouriteBusiness(favouriteData)
 	favouritePresentation := _favouritePresentation.NewFavouriteHandler(favouriteBusiness)
-=======
 	adminData := _adminData.NewAdminRepository(dbConn)
 	adminBusiness := _adminBusiness.NewAdminBusiness(adminData)
 	adminPresentation := _adminPresentation.NewAdminHandler(adminBusiness)
->>>>>>> 4882855d35667ca1be0b3d787e87aea188bd13f0
 
 	return Presenter{
 		UserPresenter:       userPresentation,
 		RestaurantPresenter: restaurantPresentation,
 		CommentPresenter:    commentPresentation,
-<<<<<<< HEAD
 		FavouritePresenter:  favouritePresentation,
-=======
 		AdminPresenter:      adminPresentation,
->>>>>>> 4882855d35667ca1be0b3d787e87aea188bd13f0
 	}
 }
