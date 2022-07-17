@@ -68,3 +68,53 @@ func (uc *restaurantUseCase) AllRestoBusiness(limit, offset int) (response []res
 
 	return response, err
 }
+
+func (uc *restaurantUseCase) DetailRestoBusiness(id int) (response restaurants.CoreDetail, err error) {
+	response, err = uc.restaurantData.DetailRestoData(id)
+
+	if err == nil {
+
+		// get rating
+		rating, _ := uc.restaurantData.RatingData(response.ID)
+		response.Rating = rating
+
+		// get resto image
+		restoImgs, _ := uc.restaurantData.RestoImagesData(response.ID)
+		for i := 0; i < len(restoImgs); i++ {
+			response.RestoImages = append(response.RestoImages, restaurants.RestoImage{RestoImageUrl: restoImgs[i]})
+		}
+
+		// get facility
+		facilities, _ := uc.restaurantData.FacilitiesData(response.ID)
+		for i := 0; i < len(restoImgs); i++ {
+			response.Facilities = append(response.Facilities, restaurants.Facility{Facility: facilities[i]})
+		}
+
+		// get comment
+		comments, _ := uc.restaurantData.CommentsData(response.ID)
+		for i := 0; i < len(comments); i++ {
+			response.Comments = append(response.Comments, restaurants.Comment{UserID: comments[i].UserID, Comment: comments[i].Comment})
+		}
+
+	}
+
+	return response, err
+}
+
+func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (response restaurants.CoreMyDetail, err error) {
+	response, err = uc.restaurantData.MyRestoData(idUser)
+
+	if err == nil {
+
+		// get rating
+		rating, _ := uc.restaurantData.RatingData(response.ID)
+		response.Rating = rating
+
+		// get resto image url
+		restoImg, _ := uc.restaurantData.RestoImageData(response.ID)
+		response.RestoImageUrl = restoImg
+
+	}
+
+	return response, err
+}

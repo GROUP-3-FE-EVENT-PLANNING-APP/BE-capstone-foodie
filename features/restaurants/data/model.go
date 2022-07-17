@@ -39,6 +39,16 @@ type RestaurantData struct {
 	RestoImages   []RestoImage
 }
 
+type RestaurantDetail struct {
+	ID            uint
+	Rating        float64 `json:"rating" form:"rating"`
+	RestoName     string  `json:"resto_name" form:"resto_name"`
+	Location      string  `json:"location" form:"location"`
+	Category      string  `json:"category" form:"category"`
+	Status        string  `json:"status" form:"status"`
+	RestoImageUrl string  `json:"resto_image_url" form:"resto_image_url"`
+}
+
 type RestoImage struct {
 	// gorm.Model
 	ID            uint `gorm:"primaryKey;autoIncrement"`
@@ -102,6 +112,41 @@ func (data *Restaurant) toCore() restaurants.Core {
 	}
 }
 
+func (data *Restaurant) toCoreDetail() restaurants.CoreDetail {
+	return restaurants.CoreDetail{
+		ID:           int(data.ID),
+		RestoName:    data.RestoName,
+		Location:     data.Location,
+		MenuImageUrl: data.MenuImageUrl,
+		Category:     data.Category,
+		TableQuota:   uint(data.TableQuota),
+		BookingFee:   data.BookingFee,
+		Latitude:     data.Latitude,
+		Longitude:    data.Longitude,
+		FileImageUrl: data.FileImageUrl,
+	}
+}
+
+func (data *RestaurantDetail) toCoreMyResto() restaurants.CoreMyDetail {
+	return restaurants.CoreMyDetail{
+		ID:            int(data.ID),
+		RestoName:     data.RestoName,
+		Location:      data.Location,
+		RestoImageUrl: data.RestoImageUrl,
+		Rating:        data.Rating,
+		Category:      data.Category,
+		Status:        data.Status,
+	}
+}
+
+func (data *Comments_Ratings) toCoreComment() restaurants.Comment {
+	return restaurants.Comment{
+		ID:      int(data.ID),
+		UserID:  int(data.UserID),
+		Comment: data.Comment,
+	}
+}
+
 func (data *Restaurant) toCore_() restaurants.CoreList {
 	return restaurants.CoreList{
 		ID:         int(data.ID),
@@ -109,10 +154,6 @@ func (data *Restaurant) toCore_() restaurants.CoreList {
 		Location:   data.Location,
 		Category:   data.Category,
 		TableQuota: data.TableQuota,
-		// RestoImages: []data.RestoImages{
-		// 	RestoImageUrl: data
-		// },
-		// RestoImages: restaurants.RestoImage.RestoImageUrl,
 	}
 }
 
@@ -135,6 +176,14 @@ func toCoreList(data []Restaurant) []restaurants.CoreList {
 	result := []restaurants.CoreList{}
 	for key := range data {
 		result = append(result, data[key].toCore_())
+	}
+	return result
+}
+
+func toCoreCommentList(data []Comments_Ratings) []restaurants.Comment {
+	result := []restaurants.Comment{}
+	for key := range data {
+		result = append(result, data[key].toCoreComment())
 	}
 	return result
 }

@@ -184,3 +184,82 @@ func (repo *mysqlRestaurantRepository) RestoImageData(idResto int) (response str
 	return data.RestoImageUrl, nil
 
 }
+
+func (repo *mysqlRestaurantRepository) RestoImagesData(idResto int) (response []string, err error) {
+	data := []RestoImage{}
+
+	result := repo.db.Where("restaurant_id = ?", idResto).Find(&data)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	var imgs []string
+
+	for i := 0; i < len(data); i++ {
+		imgs = append(imgs, data[i].RestoImageUrl)
+	}
+
+	return imgs, nil
+
+}
+
+func (repo *mysqlRestaurantRepository) FacilitiesData(idResto int) (response []string, err error) {
+	data := []Facility{}
+
+	result := repo.db.Where("restaurant_id = ?", idResto).Find(&data)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	var facilities []string
+
+	for i := 0; i < len(data); i++ {
+		facilities = append(facilities, data[i].Facility)
+	}
+
+	return facilities, nil
+
+}
+
+func (repo *mysqlRestaurantRepository) CommentsData(idResto int) (response []restaurants.Comment, err error) {
+	data := []Comments_Ratings{}
+
+	result := repo.db.Table("comments_ratings").Where("restaurant_id = ?", idResto).Order("id desc").Find(&data)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return toCoreCommentList(data), nil
+
+}
+
+func (repo *mysqlRestaurantRepository) DetailRestoData(id int) (response restaurants.CoreDetail, err error) {
+	var dataResto Restaurant
+
+	result := repo.db.First(&dataResto, "id = ?", id)
+
+	if result.RowsAffected != 1 {
+		return restaurants.CoreDetail{}, fmt.Errorf("event not found")
+	}
+
+	if result.Error != nil {
+		return restaurants.CoreDetail{}, result.Error
+	}
+
+	return dataResto.toCoreDetail(), nil
+}
+
+func (repo *mysqlRestaurantRepository) MyRestoData(idUser int) (response restaurants.CoreMyDetail, err error) {
+	var dataResto RestaurantDetail
+
+	result := repo.db.Model(&Restaurant{}).Select("id, category, resto_name, location, status").Where("user_id = ?", idUser).First(&dataResto)
+
+	if result.Error != nil {
+		return restaurants.CoreMyDetail{}, result.Error
+	}
+
+	return dataResto.toCoreMyResto(), nil
+}
