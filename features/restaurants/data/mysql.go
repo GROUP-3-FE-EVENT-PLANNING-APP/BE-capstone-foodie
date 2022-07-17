@@ -242,7 +242,7 @@ func (repo *mysqlRestaurantRepository) DetailRestoData(id int) (response restaur
 	result := repo.db.First(&dataResto, "id = ?", id)
 
 	if result.RowsAffected != 1 {
-		return restaurants.CoreDetail{}, fmt.Errorf("event not found")
+		return restaurants.CoreDetail{}, fmt.Errorf("resto not found")
 	}
 
 	if result.Error != nil {
