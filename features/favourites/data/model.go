@@ -34,7 +34,7 @@ type User struct {
 
 type Restaurant struct {
 	gorm.Model
-	Name        string
+	RestoName   string
 	RestoImages []RestoImage `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
 	Rating      float64
 	Category    string
@@ -87,7 +87,7 @@ type RestoImage struct {
 func (data *Restaurant) toCore_() favourites.RestoCore {
 	return favourites.RestoCore{
 		ID:        int(data.ID),
-		RestoName: data.Name,
+		RestoName: data.RestoName,
 		Location:  data.Location,
 		Category:  data.Category,
 	}
