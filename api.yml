@@ -29,6 +29,8 @@ paths:
             multipart/form-data:
               schema:
                 type: object
+                allOf:
+                - $ref: "#/components/schemas/requestLogin"
               examples:
                 request user:
                   value:                 
@@ -268,10 +270,13 @@ paths:
                   description: response success 1
                   value:
                     {
+                      id: 1,
                       name: "dwi",
                       email: "dwi@gmail.com",
                       avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
                       handphone: "085608560856",
+                      role: "user",
+                      created_at: "2022-07-14T16:42:33.642+07:00"
                     }
         "400":
           description: Failed Response
@@ -350,7 +355,7 @@ paths:
                   value:
                     code: 200
                     status: "success"
-                    message: "Successful Operation"
+                    message: "Success delete restaurant from favourite list"
 
         "400":
           description: Failed Response
@@ -367,6 +372,17 @@ paths:
       tags:
         - Favourites
       description: fitur untuk melihat restaurant yg ada di daftar favorit
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return 
       security:
       - JWTAuth: []
       responses:
@@ -430,6 +446,9 @@ paths:
                 menu_image_url:
                   type: string
                   format: binary
+                file_image_url:
+                  type: string
+                  format: binary
                 facility:
                   type: string
                 category:
@@ -491,16 +510,14 @@ paths:
             schema:
               type: object
               properties:
-                resto_image_url:
-                  type: array
-                  items: 
-                    type: string
-                    format: binary
                 resto_name:
                   type: string
                 location:      
                   type: string
                 menu_image_url:
+                  type: string
+                  format: binary
+                file_image_url:
                   type: string
                   format: binary
                 facility:
@@ -599,44 +616,30 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: "#"
+                items:
+                  type: object
               examples:
                 response data:
                   description: response success
                   value:
                     [{
                       resto_id: 1,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
                       category: "halal",
                       resto_name: "depot puas",
                       location: "surabaya",
-                      menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                      facility: ["mushollah", "wc", "karaoke"],
                       table_quota: 30,
-                      booking_fee: 50000,
                       rating: 4,
-                      comment: ["bagus", "bersih"],
-                      latitude: "-33.8431937",
-                      longitude: "149.8135021",
-                      status: "verified"
                     }
                     ,
-                    { 
-                      resto_id: 2,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
-                      category: "halal",
-                      resto_name: "depot puas",
-                      location: "surabaya",
-                      menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                      facility: ["mushollah", "wc", "karaoke"],
-                      table_quota: 30,
-                      booking_fee: 50000,
-                      rating: 4,
-                      comment: ["bagus", "bersih"],
-                      latitude: "-33.8431937",
-                      longitude: "149.8135021",
-                      status: "verified"
-                      
+                    {
+                      resto_id: 1,
+                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      category: "non halal",
+                      resto_name: "depot nikmat",
+                      location: "jakarta",
+                      table_quota: 40,
+                      rating: 5,
                     }
                     ]
         "400":
@@ -683,6 +686,7 @@ paths:
                       resto_name: "depot puas",
                       location: "surabaya",
                       menu_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      file_image_url: "https://gudanggroup3.s3.amazonaws.com/surat-penawaran-kerjasama-tujuh.jpg",
                       facility: ["mushollah", "wc", "karaoke"],
                       table_quota: 30,
                       booking_fee: 50000,
@@ -802,18 +806,11 @@ paths:
                       message: "please make sure all fields are filled in correctly",
                     }                
   
-  /restaurants/upload/{idrestaurant}:
+  /restaurants/upload:
     post:
       tags:
         - Restaurants
       description: fitur untuk upload foto restaurant
-      parameters:
-        - in: path
-          name: idrestaurant
-          schema:
-            type: integer
-          required: true
-          description: id restaurant untuk menambahkan foto 
       security:
         - JWTAuth: []
       requestBody:
@@ -893,7 +890,8 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: "#"
+                items:
+                  type: object
               examples:
                 response data:
                   description: response success 1
@@ -951,7 +949,8 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: "#"
+                items:
+                  type: object
               examples:
                 response data:
                   description: response success 1
@@ -989,7 +988,7 @@ paths:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "bad request" }  
   /admins/restaurants/{idrestaurant}:
-    post:
+    get:
       tags:
         - Admins
       description: fitur untuk melihat detail dan berkas restaurant
@@ -1020,7 +1019,7 @@ paths:
                      {
                       resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
                       owner_name: "dwi",
-                      file: "https://gudanggroup3.s3.amazonaws.com/surat-penawaran-kerjasama-tujuh.jpg",
+                      file_image_url: "https://gudanggroup3.s3.amazonaws.com/surat-penawaran-kerjasama-tujuh.jpg",
                       resto_name: "depot puas",
                       email: dwi@mail.com,
                       handphone: "085608560856",
@@ -1042,7 +1041,50 @@ paths:
               examples:
                 responseData1:
                   description: response failed 1
-                  value: { code: 400, status: "failed", message: "bad request" }                  
+                  value: { code: 400, status: "failed", message: "bad request" }    
+  /admins/verif/{idrestaurant}:
+    post:
+      tags:
+        - Admins
+      description: fitur untuk memverifikasi restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk verifikasi restaurant
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "Bad Request, missing or malformed jwt",
+                    }                
   #comments & rating
   /comments/{idrestaurant}:
     post:
@@ -1113,6 +1155,16 @@ paths:
             type: integer
           required: true
           description: id restaurant untuk melihat semua komen dalam 1 restaurant
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return 
         responses:
           "200":
             description: Success Response
@@ -1120,17 +1172,20 @@ paths:
               application/json:
                 schema:
                   type: array
-                  $ref: "#"
+                  items:
+                    type: object
                 example:
                       [{
                         name: "dwi",
                         avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                        comment: "tempatnya bagus"
+                        comment: "tempatnya bagus",
+                        created_at: "2022-07-15T13:12:36.333+07:00"
                       },
                       {
                       name: "syawal",
                       avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                      comment: "tempatnya menarik"
+                      comment: "tempatnya menarik",
+                      created_at: "2022-07-15T13:12:36.333+07:00"
                       }
                       ]
           "400":
@@ -1168,7 +1223,8 @@ paths:
               application/json:
                 schema:
                   type: object
-                  $ref: "#"
+                  allOf:
+                  - $ref: "#"
                 example:
                       {
                       rating: 2
@@ -1190,7 +1246,7 @@ paths:
                       } 
 components:
   securitySchemes:
-    bearerAuth:
+    JWTAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
