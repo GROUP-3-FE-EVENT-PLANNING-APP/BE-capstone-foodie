@@ -4,7 +4,6 @@ import (
 	"capstone/group3/features/restaurants"
 	_requestRestaurant "capstone/group3/features/restaurants/presentation/request"
 	_responseRestaurant "capstone/group3/features/restaurants/presentation/response"
-	"fmt"
 
 	"strconv"
 
@@ -320,9 +319,38 @@ func (h *RestaurantHandler) AllResto(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get all data"))
 	}
-
-	fmt.Println(result[0].RestoImages[0].RestoImageUrl)
-
-	// return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", result))
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreList(result)))
+}
+
+func (h *RestaurantHandler) DetailResto(c echo.Context) error {
+	id := c.Param("id")
+
+	idResto, _ := strconv.Atoi(id)
+
+	result, err := h.RestaurantBusiness.DetailRestoBusiness(idResto)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to detail data"))
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreDetail(result)))
+
+}
+
+func (h *RestaurantHandler) MyResto(c echo.Context) error {
+	// ekstrak token
+	data, errToken := _middlewares.ExtractToken(c)
+	idToken := data["userId"].(float64)
+
+	if errToken != nil {
+		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("invalid token"))
+	}
+
+	result, err := h.RestaurantBusiness.MyRestoBusiness(int(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data"))
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreDetailMyResto(result)))
+
 }

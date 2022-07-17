@@ -36,11 +36,16 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.DELETE("/restaurants", presenter.RestaurantPresenter.DestroyResto, _middleware.JWTMiddleware())
 	e.POST("/restaurants/upload", presenter.RestaurantPresenter.UploadImageResto, _middleware.JWTMiddleware())
 	e.GET("/restaurants", presenter.RestaurantPresenter.AllResto)
+	e.GET("/restaurants/:id", presenter.RestaurantPresenter.DetailResto)
+	e.GET("/myresto", presenter.RestaurantPresenter.MyResto, _middleware.JWTMiddleware())
 
 	// comments and ratings
 	e.POST("/comments/:id", presenter.CommentPresenter.PostComment, _middleware.JWTMiddleware())
 	e.GET("/comments/:id", presenter.CommentPresenter.GetComment)
 	e.GET("/comments/rating/:id", presenter.CommentPresenter.GetRating)
+
+	// admin
+	e.GET("/admins/users", presenter.AdminPresenter.AllUser, _middleware.JWTMiddleware())
 
 	return e
 

@@ -13,6 +13,10 @@ import (
 	_commentData "capstone/group3/features/comments/data"
 	_commentPresentation "capstone/group3/features/comments/presentation"
 
+	_adminBusiness "capstone/group3/features/admins/business"
+	_adminData "capstone/group3/features/admins/data"
+	_adminPresentation "capstone/group3/features/admins/presentation"
+
 	"gorm.io/gorm"
 )
 
@@ -20,6 +24,7 @@ type Presenter struct {
 	UserPresenter       *_userPresentation.UserHandler
 	RestaurantPresenter *_restaurantPresentation.RestaurantHandler
 	CommentPresenter    *_commentPresentation.CommentHandler
+	AdminPresenter      *_adminPresentation.AdminHandler
 }
 
 func InitFactory(dbConn *gorm.DB) Presenter {
@@ -36,9 +41,14 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	commentBusiness := _commentBusiness.NewCommentBusiness(commentData)
 	commentPresentation := _commentPresentation.NewCommentHandler(commentBusiness)
 
+	adminData := _adminData.NewAdminRepository(dbConn)
+	adminBusiness := _adminBusiness.NewAdminBusiness(adminData)
+	adminPresentation := _adminPresentation.NewAdminHandler(adminBusiness)
+
 	return Presenter{
 		UserPresenter:       userPresentation,
 		RestaurantPresenter: restaurantPresentation,
 		CommentPresenter:    commentPresentation,
+		AdminPresenter:      adminPresentation,
 	}
 }
