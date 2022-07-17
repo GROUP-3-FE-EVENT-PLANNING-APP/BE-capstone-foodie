@@ -39,6 +39,7 @@ func (h *UserHandler) PostUser(c echo.Context) error {
 	}
 
 	dataUser := _requestUser.ToCore(userReq)
+	dataUser.AvatarUrl = "https://gudanggroup3.s3.amazonaws.com/default_avatar.jpg"
 	row, errCreate := h.userBusiness.CreateData(dataUser)
 	if row == -1 {
 		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("please make sure all fields are filled in correctly"))
