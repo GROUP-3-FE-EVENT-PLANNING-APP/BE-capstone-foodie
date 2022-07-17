@@ -38,6 +38,11 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("/comments/:id", presenter.CommentPresenter.GetComment)
 	e.GET("/comments/rating/:id", presenter.CommentPresenter.GetRating)
 
+	// favourites
+	e.POST("/favourites/:id", presenter.FavouritePresenter.PostFav, _middleware.JWTMiddleware())
+	e.DELETE("/favourites/:id", presenter.FavouritePresenter.DeleteFav, _middleware.JWTMiddleware())
+	e.GET("/favourites", presenter.FavouritePresenter.MyFav, _middleware.JWTMiddleware())
+
 	return e
 
 }

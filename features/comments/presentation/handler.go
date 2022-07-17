@@ -66,7 +66,7 @@ func (h *CommentHandler) GetComment(c echo.Context) error {
 	idResto, _ := strconv.Atoi(id)
 	result, errGet := h.commentBusiness.GetCommentByIdResto(idResto, limitint, offsetint)
 	if errGet != nil {
-		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data user"))
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data comment"))
 	}
 
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseComment.FromCoreList(result)))
@@ -77,7 +77,7 @@ func (h *CommentHandler) GetRating(c echo.Context) error {
 	idResto, _ := strconv.Atoi(id)
 	result, errGet := h.commentBusiness.GetRatingByIdResto(idResto)
 	if errGet != nil {
-		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data user"))
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data rating"))
 	}
 	data := _responseComment.RatingResto{}
 	data.Rating = result

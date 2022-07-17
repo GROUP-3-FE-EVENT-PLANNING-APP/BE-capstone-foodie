@@ -11,7 +11,7 @@ type User struct {
 	Name      string
 	Email     string `gorm:"unique"`
 	Password  string
-	AvatarUrl string `gorm:"default:https://gudanggroup3.s3.amazonaws.com/default_avatar.jpg"`
+	AvatarUrl string
 	Handphone string `gorm:"unique"`
 	Role      string `gorm:"default:user"`
 }
