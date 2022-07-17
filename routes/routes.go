@@ -46,6 +46,8 @@ func New(presenter factory.Presenter) *echo.Echo {
 
 	// admin
 	e.GET("/admins/users", presenter.AdminPresenter.AllUser, _middleware.JWTMiddleware())
+	e.GET("/admins/restaurants", presenter.AdminPresenter.AllResto, _middleware.JWTMiddleware())
+	e.GET("/admins/restaurants/:id", presenter.AdminPresenter.DetailResto, _middleware.JWTMiddleware())
 
 	return e
 
