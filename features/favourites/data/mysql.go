@@ -2,7 +2,6 @@ package data
 
 import (
 	"capstone/group3/features/favourites"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -73,29 +72,13 @@ func (repo *mysqlFavouriteRepository) DeleteFavDB(idResto, idFromToken int) (row
 }
 
 func (repo *mysqlFavouriteRepository) AllRestoData(limitint, offsetint, idFromToken int) (response []favourites.RestoCore, err error) {
-	var dataResto []Restaurant
 	var dataFav []Favourite
-	fmt.Println("idFromToken: ", idFromToken)
-	dbCheck := repo.DB.Where("user_id=?", idFromToken).Find(&dataFav)
-	fmt.Println("dataFav: ", dataFav)
-	if len(dataFav) < 1 {
-		fmt.Println("kosong")
-	} else {
-		fmt.Println("tidak kosong")
-	}
-	if len(dataFav) < 1 {
-		return []favourites.RestoCore{}, dbCheck.Error
-	} else {
-		result := repo.DB.Preload("Favourite", "user_id=?", idFromToken).Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location").Order("id desc").Limit(limitint).Offset(offsetint).Find(&dataResto)
 
-		// result := repo.DB.Preload("Restaurant").Preload("RestoImages").Model(&Favourite{}).Where("user_id=?", idFromToken).Order("id desc").Limit(limitint).Offset(offsetint).Find(&dataFav)
+	result := repo.DB.Joins("Restaurant").Where("favourites.user_id = ?", idFromToken).Limit(limitint).Offset(offsetint).Order("created_at DESC").Find(&dataFav)
 
-		// result := repo.DB.Joins("Favourite", repo.DB.Where(&Favourite{UserID: idFromToken})).Joins("Restaurant").Preload("RestoImages").Find(&dataResto)
-
-		if result.Error != nil {
-			return []favourites.RestoCore{}, result.Error
-		}
+	if result.Error != nil {
+		return []favourites.RestoCore{}, result.Error
 	}
 
-	return toCoreList(dataResto), nil
+	return toCoreList(dataFav), nil
 }

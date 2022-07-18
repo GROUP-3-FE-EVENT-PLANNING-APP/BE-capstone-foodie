@@ -73,6 +73,8 @@ func (h *FavouriteHandler) MyFav(c echo.Context) error {
 	if errGet != nil {
 		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get my favourites resto data"))
 	}
-
+	if len(data) < 1 {
+		return c.JSON(http.StatusNotFound, _helper.ResponseOkNoData("your favorites list is empty"))
+	}
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseFavourite.FromCoreList(data)))
 }
