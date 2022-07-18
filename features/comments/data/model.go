@@ -27,7 +27,7 @@ type User struct {
 
 type Restaurant struct {
 	gorm.Model
-	Name             string
+	RestoName        string             `gorm:"not null; type:varchar(255); unique"`
 	Comments_Ratings []Comments_Ratings `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
 }
 
@@ -42,8 +42,8 @@ func (data *Comments_Ratings) toCore() comments.Core {
 			AvatarUrl: data.User.AvatarUrl,
 		},
 		Restaurant: comments.Restaurant{
-			ID:   int(data.RestaurantID),
-			Name: data.Restaurant.Name,
+			ID:        int(data.RestaurantID),
+			RestoName: data.Restaurant.RestoName,
 		},
 		Comment:   data.Comment,
 		Rating:    data.Rating,
@@ -68,7 +68,7 @@ func FromCore(core comments.Core) Comments_Ratings {
 		},
 		RestaurantID: uint(core.Restaurant.ID),
 		Restaurant: Restaurant{
-			Name: core.Restaurant.Name,
+			RestoName: core.Restaurant.RestoName,
 		},
 		Comment:   core.Comment,
 		Rating:    core.Rating,

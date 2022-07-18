@@ -12,7 +12,7 @@ type User struct {
 
 type Restaurant struct {
 	ID           int
-	Name         string
+	RestoName    string
 	Location     string
 	MenuImageUrl string
 	Category     string
@@ -43,7 +43,7 @@ type RestoCore struct {
 	TableQuota    uint
 	Rating        float64
 	RestoImageUrl string
-	RestoImages   []RestoImage
+	RestoImages   string
 }
 
 type Business interface {
