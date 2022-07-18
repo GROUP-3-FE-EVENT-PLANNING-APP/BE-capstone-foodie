@@ -37,7 +37,7 @@ func (uc *favouriteUseCase) GetMyFav(limitint, offsetint, idFromToken int) (resp
 			// get resto image url
 			restoImg, _ := uc.favouriteData.RestoImageData(response[i].ID)
 
-			response[i].RestoImages = append(response[i].RestoImages, favourites.RestoImage{RestoImageUrl: restoImg})
+			response[i].RestoImages = restoImg
 		}
 	}
 

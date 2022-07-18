@@ -34,12 +34,13 @@ type User struct {
 
 type Restaurant struct {
 	gorm.Model
-	RestoName   string
-	RestoImages []RestoImage `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
-	Rating      float64
-	Category    string
-	Location    string
-	Favourite   []Favourite `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
+	RestoName     string       `gorm:"not null; type:varchar(255); unique"`
+	RestoImages   []RestoImage `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
+	Rating        float64
+	Category      string
+	Location      string
+	Favourite     []Favourite `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
+	RestoImageUrl string
 }
 
 type RestoImage struct {

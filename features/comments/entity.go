@@ -19,8 +19,8 @@ type User struct {
 }
 
 type Restaurant struct {
-	ID   int
-	Name string
+	ID        int
+	RestoName string
 }
 
 type Business interface {

@@ -65,7 +65,7 @@ func (repo *mysqlFavouriteRepository) DeleteFavDB(idResto, idFromToken int) (row
 	dataFav := Favourite{}
 	dataFav.UserID = idFromToken
 	dataFav.RestaurantID = idResto
-	resultDel := repo.DB.Where("restaurant_id=? and user_id=?", idResto, idFromToken).Delete(&dataFav)
+	resultDel := repo.DB.Unscoped().Where("restaurant_id=? and user_id=?", idResto, idFromToken).Delete(&dataFav)
 	if resultDel.Error != nil {
 		return 0, resultDel.Error
 	}
@@ -74,14 +74,28 @@ func (repo *mysqlFavouriteRepository) DeleteFavDB(idResto, idFromToken int) (row
 
 func (repo *mysqlFavouriteRepository) AllRestoData(limitint, offsetint, idFromToken int) (response []favourites.RestoCore, err error) {
 	var dataResto []Restaurant
-
-	result := repo.DB.Preload("Favourite").Where("user_id=?", idFromToken).Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location").Order("id desc").Limit(limitint).Offset(offsetint).Find(&dataResto)
-
-	if result.Error != nil {
-		return []favourites.RestoCore{}, result.Error
+	var dataFav []Favourite
+	fmt.Println("idFromToken: ", idFromToken)
+	dbCheck := repo.DB.Where("user_id=?", idFromToken).Find(&dataFav)
+	fmt.Println("dataFav: ", dataFav)
+	if len(dataFav) < 1 {
+		fmt.Println("kosong")
+	} else {
+		fmt.Println("tidak kosong")
 	}
-	fmt.Println("dataResto:", dataResto)
-	// fmt.Println(dataResto[0].RestoImages[0].RestoImageUrl)
+	if len(dataFav) < 1 {
+		return []favourites.RestoCore{}, dbCheck.Error
+	} else {
+		result := repo.DB.Preload("Favourite", "user_id=?", idFromToken).Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location").Order("id desc").Limit(limitint).Offset(offsetint).Find(&dataResto)
+
+		// result := repo.DB.Preload("Restaurant").Preload("RestoImages").Model(&Favourite{}).Where("user_id=?", idFromToken).Order("id desc").Limit(limitint).Offset(offsetint).Find(&dataFav)
+
+		// result := repo.DB.Joins("Favourite", repo.DB.Where(&Favourite{UserID: idFromToken})).Joins("Restaurant").Preload("RestoImages").Find(&dataResto)
+
+		if result.Error != nil {
+			return []favourites.RestoCore{}, result.Error
+		}
+	}
 
 	return toCoreList(dataResto), nil
 }

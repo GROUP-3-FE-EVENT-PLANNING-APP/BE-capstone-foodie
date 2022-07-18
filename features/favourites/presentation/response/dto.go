@@ -5,12 +5,12 @@ import (
 )
 
 type RestoFav struct {
-	RestoID       int          `json:"resto_id"`
-	RestoImageUrl []RestoImage `json:"resto_image_url"`
-	Rating        float64      `json:"rating"`
-	Category      string       `json:"category"`
-	RestoName     string       `json:"resto_name"`
-	Location      string       `json:"location"`
+	RestoID       int     `json:"resto_id"`
+	RestoImageUrl string  `json:"resto_image_url"`
+	Rating        float64 `json:"rating"`
+	Category      string  `json:"category"`
+	RestoName     string  `json:"resto_name"`
+	Location      string  `json:"location"`
 }
 
 type RestoImage struct {
@@ -24,7 +24,8 @@ func FromCoreAll(data favourites.RestoCore) RestoFav {
 		Location:      data.Location,
 		Category:      data.Category,
 		Rating:        data.Rating,
-		RestoImageUrl: FromRestoImageCoreList(data.RestoImages)}
+		RestoImageUrl: data.RestoImages,
+	}
 }
 
 func FromRestoImageCore(data favourites.RestoImage) RestoImage {
