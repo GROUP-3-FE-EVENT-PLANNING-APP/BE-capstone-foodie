@@ -21,30 +21,30 @@ type Restaurant struct {
 }
 
 type Restaurant_ struct {
-	ID          int     `json:"id" form:"id"`
-	RestoName   string  `json:"resto_name" form:"resto_name"`
-	Location    string  `json:"location" form:"location"`
-	Category    string  `json:"category" form:"category"`
-	TableQuota  uint    `json:"table_quota" form:"table_quota"`
-	Rating      float64 `json:"rating" form:"rating"`
-	RestoImages []RestoImage
+	ID          int          `json:"id" form:"id"`
+	RestoName   string       `json:"resto_name" form:"resto_name"`
+	Location    string       `json:"location" form:"location"`
+	Category    string       `json:"category" form:"category"`
+	TableQuota  uint         `json:"table_quota" form:"table_quota"`
+	Rating      float64      `json:"rating" form:"rating"`
+	RestoImages []RestoImage `json:"resto_images"`
 }
 
 type RestaurantDetail struct {
-	ID           int    `json:"id" form:"id"`
-	RestoName    string `json:"resto_name" form:"resto_name"`
-	Category     string `json:"category" form:"category"`
-	Location     string `json:"location" form:"location"`
-	MenuImageUrl string `json:"menu_image_url" form:"menu_image_url"`
-	FileImageUrl string `json:"file_image_url" form:"file_image_url"`
-	Facilities   []Facility
-	RestoImages  []RestoImage
-	TableQuota   uint    `json:"table_quota" form:"table_quota"`
-	BookingFee   uint64  `json:"booking_fee" form:"booking_fee"`
-	Rating       float64 `json:"rating" form:"rating"`
-	Comments     []Comment
-	Latitude     string `json:"latitude" form:"latitude"`
-	Longitude    string `json:"longitude" form:"langitude"`
+	ID           int          `json:"id" form:"id"`
+	RestoName    string       `json:"resto_name" form:"resto_name"`
+	Category     string       `json:"category" form:"category"`
+	Location     string       `json:"location" form:"location"`
+	MenuImageUrl string       `json:"menu_image_url" form:"menu_image_url"`
+	FileImageUrl string       `json:"file_image_url" form:"file_image_url"`
+	Facilities   []Facility   `json:"facilities"`
+	RestoImages  []RestoImage `json:"resto_images"`
+	TableQuota   uint         `json:"table_quota" form:"table_quota"`
+	BookingFee   uint64       `json:"booking_fee" form:"booking_fee"`
+	Rating       float64      `json:"rating" form:"rating"`
+	Comments     []Comment    `json:"comments"`
+	Latitude     string       `json:"latitude" form:"latitude"`
+	Longitude    string       `json:"longitude" form:"langitude"`
 }
 
 type RestaurantMyDetail struct {
