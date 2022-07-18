@@ -25,30 +25,30 @@ type Restaurant struct {
 }
 
 type DetailRestaurant struct {
-	ID           int    `json:"id" form:"id"`
-	RestoName    string `json:"resto_name" form:"resto_name"`
-	Category     string `json:"category" form:"category"`
-	Location     string `json:"location" form:"location"`
-	FileImageUrl string `json:"file_image_url" form:"file_image_url"`
-	Facilities   []Facility
-	RestoImages  []RestoImage
-	TableQuota   uint    `json:"table_quota" form:"table_quota"`
-	BookingFee   uint64  `json:"booking_fee" form:"booking_fee"`
-	Rating       float64 `json:"rating" form:"rating"`
-	OwnerName    string  `json:"owner_name" form:"owner_name"`
-	Email        string  `json:"email" form:"email"`
-	Handphone    string  `json:"handphone" form:"handphone"`
-	Status       string  `json:"status" form:"status"`
-	Latitude     string  `json:"latitude" form:"latitude"`
-	Longitude    string  `json:"longitude" form:"longitude"`
+	ID           int          `json:"id" form:"id"`
+	RestoName    string       `json:"resto_name" form:"resto_name"`
+	Category     string       `json:"category" form:"category"`
+	Location     string       `json:"location" form:"location"`
+	FileImageUrl string       `json:"file_image_url" form:"file_image_url"`
+	Facilities   []Facility   `json:"facilities"`
+	RestoImages  []RestoImage `json:"resto_images"`
+	TableQuota   uint         `json:"table_quota" form:"table_quota"`
+	BookingFee   uint64       `json:"booking_fee" form:"booking_fee"`
+	Rating       float64      `json:"rating" form:"rating"`
+	OwnerName    string       `json:"owner_name" form:"owner_name"`
+	Email        string       `json:"email" form:"email"`
+	Handphone    string       `json:"handphone" form:"handphone"`
+	Status       string       `json:"status" form:"status"`
+	Latitude     string       `json:"latitude" form:"latitude"`
+	Longitude    string       `json:"longitude" form:"longitude"`
 }
 
 type Facility struct {
-	Facility string
+	Facility string `json:"facility"`
 }
 
 type RestoImage struct {
-	RestoImageUrl string
+	RestoImageUrl string `json:"resto_image_url"`
 }
 
 func FormCore(data admins.Core) User {
