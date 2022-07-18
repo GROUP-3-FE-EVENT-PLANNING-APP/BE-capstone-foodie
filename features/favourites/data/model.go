@@ -85,16 +85,16 @@ type RestoImage struct {
 // 	}
 // }
 
-func (data *Restaurant) toCore_() favourites.RestoCore {
+func (data *Favourite) toCore_() favourites.RestoCore {
 	return favourites.RestoCore{
 		ID:        int(data.ID),
-		RestoName: data.RestoName,
-		Location:  data.Location,
-		Category:  data.Category,
+		RestoName: data.Restaurant.RestoName,
+		Location:  data.Restaurant.Location,
+		Category:  data.Restaurant.Category,
 	}
 }
 
-func toCoreList(data []Restaurant) []favourites.RestoCore {
+func toCoreList(data []Favourite) []favourites.RestoCore {
 	result := []favourites.RestoCore{}
 	for key := range data {
 		result = append(result, data[key].toCore_())

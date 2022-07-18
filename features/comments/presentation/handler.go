@@ -68,7 +68,9 @@ func (h *CommentHandler) GetComment(c echo.Context) error {
 	if errGet != nil {
 		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data comment"))
 	}
-
+	if len(result) < 1 {
+		return c.JSON(http.StatusNotFound, _helper.ResponseOkNoData("no comment data in this restaurant id"))
+	}
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseComment.FromCoreList(result)))
 }
 
