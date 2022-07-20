@@ -58,7 +58,7 @@ func (h *UserHandler) LoginAuth(c echo.Context) error {
 	if e != nil {
 		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("email or password incorrect"))
 	}
-	
+
 	data := map[string]interface{}{
 		"id":        fromToken["id"],
 		"token":     fromToken["token"],
