@@ -17,8 +17,8 @@ type Restaurant struct {
 type User struct {
 	ID        uint
 	Name      string
-	Email     string
-	Handphone string
+	Email     string    `gorm:"unique"`
+	Handphone string    `gorm:"unique"`
 	Booking   []Booking `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 }
 
