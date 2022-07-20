@@ -18,8 +18,8 @@ type Restaurant struct {
 	Category     string `json:"category" form:"category" gorm:"not null; type:varchar(100)"`
 	TableQuota   uint   `json:"table_quota" form:"table_quota" gorm:"not null; type:integer"`
 	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" gorm:"not null; type:bigint(20)"`
-	Latitude     string `json:"latitude" form:"latitude" gorm:"not null; type:varchar(255)"`
-	Longitude    string `json:"longitude" form:"longitude" gorm:"not null; type:varchar(255)"`
+	Latitude     string `json:"latitude" form:"latitude" gorm:"type:varchar(255)"`
+	Longitude    string `json:"longitude" form:"longitude" gorm:"type:varchar(255)"`
 	Status       string `json:"status" form:"status" gorm:"not null; type:varchar(100); default:unverification"`
 	FileImageUrl string `json:"file_image_url" form:"file_image_url" gorm:"not null; type:varchar(255)"`
 	CreatedAt    time.Time
@@ -27,6 +27,20 @@ type Restaurant struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 	Facilities   []Facility     `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
 	RestoImages  []RestoImage   `gorm:"foreignKey:RestaurantID;references:ID;constraint:OnDelete:CASCADE"`
+}
+
+type Booking struct {
+	ID           uint
+	UserID       uint `json:"user_id" form:"user_id"`
+	User         User
+	RestaurantID uint `json:"restaurant_id" form:"restaurant_id"`
+	Restaurant   Restaurant
+	Transaction  string `json:"transaction" form:"transaction" gorm:"type:varchar(255)"`
+	TableQuota   uint   `json:"table_quota" form:"table_quota" gorm:"not null;type:integer"`
+	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" gorm:"not null;type:bigint(20)"`
+	Status       int    `json:"status" form:"status" gorm:"type:integer"`
+	Date         string `json:"date" form:"date" gorm:"not null;type:date"`
+	Time         string `json:"time" form:"time" gorm:"not null;type:varchar(10)"`
 }
 
 type RestaurantData struct {

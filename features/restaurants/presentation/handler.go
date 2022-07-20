@@ -347,6 +347,11 @@ func (h *RestaurantHandler) MyResto(c echo.Context) error {
 	}
 
 	result, err := h.RestaurantBusiness.MyRestoBusiness(int(idToken))
+
+	if err.Error() == "restaurant not found" {
+		return c.JSON(http.StatusNotFound, _helper.ResponseOkNoData("you don't have restaurant yet"))
+	}
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get data"))
 	}

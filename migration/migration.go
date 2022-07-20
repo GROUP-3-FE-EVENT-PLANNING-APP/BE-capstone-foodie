@@ -1,6 +1,7 @@
 package migration
 
 import (
+	_mBooking "capstone/group3/features/booking/data"
 	_mComments "capstone/group3/features/comments/data"
 	_mFavourites "capstone/group3/features/favourites/data"
 	_mRestaurants "capstone/group3/features/restaurants/data"
@@ -16,4 +17,5 @@ func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_mRestaurants.RestoImage{})
 	db.AutoMigrate(&_mComments.Comments_Ratings{})
 	db.AutoMigrate(&_mFavourites.Favourite{})
+	db.AutoMigrate(&_mBooking.Booking{})
 }

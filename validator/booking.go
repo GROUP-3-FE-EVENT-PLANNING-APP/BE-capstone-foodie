@@ -21,6 +21,9 @@ var ErroHandlerBooking = func(err error, c echo.Context) {
 			case "required":
 				report.Message = fmt.Sprintf("%s is required",
 					err.Field())
+			case "number":
+				report.Message = fmt.Sprintf("%s value required number",
+					err.Field())
 			}
 
 			break

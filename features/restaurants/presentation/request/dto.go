@@ -11,8 +11,8 @@ type Restaurant struct {
 	Category     string `json:"category" form:"category" validate:"required"`
 	TableQuota   uint   `json:"table_quota" form:"table_quota" validate:"required,number"`
 	BookingFee   uint64 `json:"booking_fee" form:"booking_fee" validate:"required,number"`
-	Latitude     string `json:"latitude" form:"latitude" validate:"required"`
-	Longitude    string `json:"longitude" form:"longitude" validate:"required"`
+	Latitude     string `json:"latitude" form:"latitude"`
+	Longitude    string `json:"longitude" form:"longitude"`
 	Status       string `json:"status" form:"status"`
 	FileImageUrl string `json:"file_image_url" form:"file_image_url"`
 	UserId       int    `json:"user_id" form:"user_id"`

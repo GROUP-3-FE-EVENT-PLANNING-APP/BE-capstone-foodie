@@ -16,9 +16,14 @@ import (
 	_adminBusiness "capstone/group3/features/admins/business"
 	_adminData "capstone/group3/features/admins/data"
 	_adminPresentation "capstone/group3/features/admins/presentation"
+
 	_favouriteBusiness "capstone/group3/features/favourites/business"
 	_favouriteData "capstone/group3/features/favourites/data"
 	_favouritePresentation "capstone/group3/features/favourites/presentation"
+
+	_bookingBusiness "capstone/group3/features/booking/business"
+	_bookingData "capstone/group3/features/booking/data"
+	_bookingPresentation "capstone/group3/features/booking/presentation"
 
 	"gorm.io/gorm"
 )
@@ -29,6 +34,7 @@ type Presenter struct {
 	CommentPresenter    *_commentPresentation.CommentHandler
 	FavouritePresenter  *_favouritePresentation.FavouriteHandler
 	AdminPresenter      *_adminPresentation.AdminHandler
+	BookingPresenter    *_bookingPresentation.BookingHandler
 }
 
 func InitFactory(dbConn *gorm.DB) Presenter {
@@ -48,9 +54,14 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	favouriteData := _favouriteData.NewFavouriteRepository(dbConn)
 	favouriteBusiness := _favouriteBusiness.NewFavouriteBusiness(favouriteData)
 	favouritePresentation := _favouritePresentation.NewFavouriteHandler(favouriteBusiness)
+
 	adminData := _adminData.NewAdminRepository(dbConn)
 	adminBusiness := _adminBusiness.NewAdminBusiness(adminData)
 	adminPresentation := _adminPresentation.NewAdminHandler(adminBusiness)
+
+	bookingData := _bookingData.NewBookingRepository(dbConn)
+	bookingBusiness := _bookingBusiness.NewBookingBusiness(bookingData)
+	bookingPresentation := _bookingPresentation.NewBookingHandler(bookingBusiness)
 
 	return Presenter{
 		UserPresenter:       userPresentation,
@@ -58,5 +69,6 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 		CommentPresenter:    commentPresentation,
 		FavouritePresenter:  favouritePresentation,
 		AdminPresenter:      adminPresentation,
+		BookingPresenter:    bookingPresentation,
 	}
 }
