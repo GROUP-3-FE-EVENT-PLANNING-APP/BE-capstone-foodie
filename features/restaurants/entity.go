@@ -112,4 +112,5 @@ type Data interface {
 	FacilitiesData(idResto int) (result []string, err error)
 	CommentsData(idResto int) (result []Comment, err error)
 	MyRestoData(id int) (result CoreMyDetail, err error)
+	CheckTableQuotaData(id int) (result int, err error)
 }
