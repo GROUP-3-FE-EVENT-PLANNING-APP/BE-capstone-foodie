@@ -58,6 +58,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 
 	// booking
 	e.POST("/restaurants/booking/:id", presenter.BookingPresenter.BookingResto, _middleware.JWTMiddleware())
+	e.POST("/payment/webhook", presenter.BookingPresenter.AcceptPayment)
 
 	return e
 
