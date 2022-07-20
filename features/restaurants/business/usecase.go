@@ -3,6 +3,7 @@ package business
 import (
 	"capstone/group3/features/restaurants"
 	"errors"
+	"fmt"
 )
 
 type restaurantUseCase struct {
@@ -72,6 +73,18 @@ func (uc *restaurantUseCase) AllRestoBusiness(limit, offset int) (response []res
 func (uc *restaurantUseCase) DetailRestoBusiness(id int) (response restaurants.CoreDetail, err error) {
 	response, err = uc.restaurantData.DetailRestoData(id)
 
+	// check table quota
+	tableQouta, errCheck := uc.restaurantData.CheckTableQuotaData(id)
+
+	if errCheck != nil {
+		return restaurants.CoreDetail{}, errCheck
+	}
+
+	// check table qouta after
+	// tableQoutaAfter, errCheck := uc.restaurantData.CheckTableQuotaData(id)
+
+	response.TableQuota = response.TableQuota - uint(tableQouta)
+
 	if err == nil {
 
 		// get rating
@@ -103,6 +116,10 @@ func (uc *restaurantUseCase) DetailRestoBusiness(id int) (response restaurants.C
 
 func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (response restaurants.CoreMyDetail, err error) {
 	response, err = uc.restaurantData.MyRestoData(idUser)
+
+	if err.Error() == "restaurant not found" {
+		return restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
+	}
 
 	if err == nil {
 

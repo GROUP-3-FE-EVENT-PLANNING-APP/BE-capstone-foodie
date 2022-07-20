@@ -14,6 +14,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e := echo.New()
 
 	e.HTTPErrorHandler = _validatorUser.ErrorHandlerUser
+	e.HTTPErrorHandler = _validatorUser.ErroHandlerBooking
 	e.HTTPErrorHandler = _validatorUser.ErroHandlerRestaurant
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -48,11 +49,16 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.POST("/favourites/:id", presenter.FavouritePresenter.PostFav, _middleware.JWTMiddleware())
 	e.DELETE("/favourites/:id", presenter.FavouritePresenter.DeleteFav, _middleware.JWTMiddleware())
 	e.GET("/favourites", presenter.FavouritePresenter.MyFav, _middleware.JWTMiddleware())
+
 	// admin
 	e.GET("/admins/users", presenter.AdminPresenter.AllUser, _middleware.JWTMiddleware())
 	e.GET("/admins/restaurants", presenter.AdminPresenter.AllResto, _middleware.JWTMiddleware())
 	e.GET("/admins/restaurants/:id", presenter.AdminPresenter.DetailResto, _middleware.JWTMiddleware())
 	e.POST("/admins/verif/:id", presenter.AdminPresenter.VerifResto, _middleware.JWTMiddleware())
+
+	// booking
+	e.POST("/restaurants/booking/:id", presenter.BookingPresenter.BookingResto, _middleware.JWTMiddleware())
+	e.POST("/payment/webhook", presenter.BookingPresenter.AcceptPayment)
 
 	return e
 

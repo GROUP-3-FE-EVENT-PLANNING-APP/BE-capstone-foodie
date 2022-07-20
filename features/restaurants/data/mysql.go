@@ -4,6 +4,7 @@ import (
 	"capstone/group3/features/restaurants"
 	"fmt"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -242,7 +243,7 @@ func (repo *mysqlRestaurantRepository) DetailRestoData(id int) (response restaur
 	result := repo.db.First(&dataResto, "id = ?", id)
 
 	if result.RowsAffected != 1 {
-		return restaurants.CoreDetail{}, fmt.Errorf("resto not found")
+		return restaurants.CoreDetail{}, err
 	}
 
 	if result.Error != nil {
@@ -257,9 +258,86 @@ func (repo *mysqlRestaurantRepository) MyRestoData(idUser int) (response restaur
 
 	result := repo.db.Model(&Restaurant{}).Select("id, category, resto_name, location, status").Where("user_id = ?", idUser).First(&dataResto)
 
+	if result.RowsAffected != 1 {
+		return restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
+	}
+
 	if result.Error != nil {
 		return restaurants.CoreMyDetail{}, result.Error
 	}
 
 	return dataResto.toCoreMyResto(), nil
+}
+
+func (repo *mysqlRestaurantRepository) CheckTableQuotaData(idResto int) (response int, err error) {
+	var dataBookings []Booking
+
+	resultBefore := repo.db.Table("bookings").Select("id, restaurant_id, date, time").Where("restaurant_id = ? AND booking_status = ?", idResto, "active").Find(&dataBookings)
+
+	if resultBefore.Error != nil {
+		return 0, resultBefore.Error
+	}
+
+	if resultBefore.RowsAffected == 0 {
+		return 0, resultBefore.Error
+	}
+
+	//init the loc
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+
+	//set timezone,
+	DateTimeNow := time.Now().In(loc)
+
+	var dsBooking Booking
+	for _, v := range dataBookings {
+		// convert string to time
+		bDate := v.Date
+		bTime := v.Time
+
+		// split booking date
+		dataSplitDate := strings.Split(bDate, "T")
+
+		dataBoookingDateTime := dataSplitDate[0] + " " + bTime + " +0700"
+
+		// convert string to time
+		layout_time := "2006-01-02 15:04:05 Z0700"
+		bookingDateTime, _ := time.Parse(layout_time, dataBoookingDateTime)
+
+		bookingDateExp := bookingDateTime.Add(time.Hour * time.Duration(3))
+
+		if DateTimeNow.After(bookingDateExp) {
+			// update status booking
+			upBookingResto := repo.db.Model(&dsBooking).Where("id = ?", v.ID).Update("booking_status", "expired")
+
+			if upBookingResto.Error != nil {
+				return 0, upBookingResto.Error
+			}
+
+			if upBookingResto.RowsAffected != 1 {
+				return 0, upBookingResto.Error
+			}
+		}
+
+	}
+
+	var dataBookingAfter []Booking
+	tableQouta := 0
+	resultAfter := repo.db.Table("bookings").Select("restaurant_id, table_quota").Where("restaurant_id = ? AND booking_status = ?", idResto, "active").Find(&dataBookingAfter)
+
+	fmt.Println(dataBookingAfter)
+
+	if resultAfter.Error != nil {
+		return 0, resultAfter.Error
+	}
+
+	if resultAfter.RowsAffected != 1 {
+		return 0, resultAfter.Error
+	}
+
+	for _, r := range dataBookingAfter {
+		fmt.Println(r.TableQuota)
+		tableQouta += int(r.TableQuota)
+	}
+
+	return tableQouta, nil
 }
