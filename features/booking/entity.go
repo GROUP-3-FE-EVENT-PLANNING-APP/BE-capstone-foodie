@@ -32,8 +32,14 @@ type Restaurant struct {
 	BookingFee uint64
 }
 
+type PaymentWebhook struct {
+	TransactionStatus string
+	OrderID           string
+}
+
 type Business interface {
 	BookingRestoBusiness(data Core) (row int, token, redirectURL string, err error)
+	PaymentBusiness(data PaymentWebhook) (row int, err error)
 }
 
 type Data interface {
@@ -41,4 +47,5 @@ type Data interface {
 	CheckTableReservedData(idResto int) (response int, err error)
 	CheckTableQuotaData(idResto int) (response Restaurant, err error)
 	GetUserData(idUser int) (response _helper.DetailPayment, err error)
+	PaymentData(data PaymentWebhook) (row int, err error)
 }

@@ -91,3 +91,22 @@ func (repo *mysqlBookingRepository) GetUserData(idUser int) (response _helper.De
 
 	return response, err
 }
+
+func (repo *mysqlBookingRepository) PaymentData(data booking.PaymentWebhook) (response int, err error) {
+
+	if data.TransactionStatus != "settlement" {
+		return -1, fmt.Errorf("status not match")
+	}
+
+	result := repo.db.Table("bookings").Where("order_id = ?", data.OrderID).Update("payment_status", "accepted")
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("order_id not found")
+	}
+
+	return int(result.RowsAffected), err
+}

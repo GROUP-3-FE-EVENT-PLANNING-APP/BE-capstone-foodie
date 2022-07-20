@@ -77,3 +77,29 @@ func (h *BookingHandler) BookingResto(c echo.Context) error {
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", dataResponse))
 
 }
+
+func (h *BookingHandler) AcceptPayment(c echo.Context) error {
+
+	var data _requestBooking.PaymentWebhook
+
+	// binding data
+	errBind := c.Bind(&data)
+
+	if errBind != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to bind data, check your input"))
+	}
+
+	dataPayment := _requestBooking.ToCorePaymentWebhook(data)
+	response, err := h.BookingBusiness.PaymentBusiness(dataPayment)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to accept your payment"))
+	}
+
+	if response == -1 {
+		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("transaction status not match"))
+	}
+
+	return c.JSON(http.StatusOK, _helper.ResponseOkNoData("payment successful"))
+
+}

@@ -66,3 +66,9 @@ func (uc *bookingUseCase) BookingRestoBusiness(data booking.Core) (row int, toke
 
 	return response, getPayment.Token, getPayment.RedirectURL, err
 }
+
+func (uc *bookingUseCase) PaymentBusiness(data booking.PaymentWebhook) (row int, err error) {
+	row, err = uc.bookingData.PaymentData(data)
+
+	return row, err
+}

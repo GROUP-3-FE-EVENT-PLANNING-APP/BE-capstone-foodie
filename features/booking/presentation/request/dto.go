@@ -11,10 +11,22 @@ type Booking struct {
 	Time       string `json:"time" form:"time" validate:"required"`
 }
 
+type PaymentWebhook struct {
+	TransactionStatus string `json:"transaction_status" form:"transaction_status"`
+	OrderID           string `json:"order_id" form:"order_id"`
+}
+
 func ToCore(req Booking) booking.Core {
 	return booking.Core{
 		TableQuota: req.TableQuota,
 		Date:       req.Date,
 		Time:       req.Time,
+	}
+}
+
+func ToCorePaymentWebhook(req PaymentWebhook) booking.PaymentWebhook {
+	return booking.PaymentWebhook{
+		TransactionStatus: req.TransactionStatus,
+		OrderID:           req.OrderID,
 	}
 }
