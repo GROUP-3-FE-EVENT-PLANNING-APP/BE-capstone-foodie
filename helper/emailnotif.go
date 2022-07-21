@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	gomail "gopkg.in/mail.v2"
 )
@@ -14,45 +15,68 @@ type Recipient struct {
 	TotalPayment uint64
 }
 
-// 465
-// 587
-
 func SendEmail(data Recipient) {
+	host := os.Getenv("GMAIL_SMTP_HOST")
+	port, _ := strconv.Atoi(os.Getenv("GMAIL_SMTP_PORT"))
+	email := os.Getenv("GMAIL_AUTH_EMAIL")
+	password := os.Getenv("GMAIL_AUTH_PASSWORD")
+
 	msg := gomail.NewMessage()
 	msg.SetHeader("From", "altacapstonegroup3@gmail.com")
-	msg.SetHeader("To", "tesbahaso1503@gmail.com")
+	msg.SetHeader("To", data.Email)
 	msg.SetHeader("Subject", "Notification Payment")
-	msg.SetBody("text/html", "<b>This is the body of the mail</b>")
+	msg.SetBody("text/html", `
+			<table>
+				<tr>
+					<td colspan="2">
+						<h3>--------- Payment Success --------</h3>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						ID Order 
+					</td>
+					<td>
+						: 980808080
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Name 
+					</td>
+					<td>
+						: Syawal
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Total Payment
+					</td>
+					<td>
+					: Rp. 600.000
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Payment Time 
+					</td>
+					<td>
+						: 12-12-2022 12:00:00
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h3>--------- Wisata Foodie -----------</h3>
+					</td>
+				</tr>
+			</table>
+	
+	`)
 
-	n := gomail.NewDialer(os.Getenv("GMAIL_SMTP_HOST"), 587, os.Getenv("GMAIL_AUTH_EMAIL"), os.Getenv("GMAIL_AUTH_PASSWORD"))
+	n := gomail.NewDialer(host, port, email, password)
 
 	// Send the email
 	if err := n.DialAndSend(msg); err != nil {
 		fmt.Println(err.Error())
 	}
 }
-
-// const CONFIG_SMTP_HOST = "smtp-mail.outlook.com"
-// const CONFIG_SMTP_PORT = 587
-
-// func SendEmail(data Recipient) {
-// 	mailer := gomail.NewMessage()
-// 	mailer.SetHeader("From", "PT. Makmur Subur Jaya <altacapstonegroup3@outlook.com>")
-// 	mailer.SetHeader("To", "tesbahaso1503@gmail.com")
-// 	mailer.SetAddressHeader("Cc", "tesbahaso1503@gmail.com", "Tra Lala La")
-// 	mailer.SetHeader("Subject", "Email Notif")
-// 	mailer.SetBody("text/html", "Hello, <b>have a nice day</b>")
-
-// 	dialer := gomail.NewDialer(
-// 		os.Getenv("EMAIL_SMTP_HOST"),
-// 		CONFIG_SMTP_PORT,
-// 		os.Getenv("EMAIL_AUTH_EMAIL"),
-// 		"altaGroup3_",
-// 	)
-
-// 	err := dialer.DialAndSend(mailer)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 		// log.Fatal(err.Error())
-// 	}
-// }
