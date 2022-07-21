@@ -346,9 +346,9 @@ func (h *RestaurantHandler) MyResto(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("invalid token"))
 	}
 
-	result, err := h.RestaurantBusiness.MyRestoBusiness(int(idToken))
+	row, result, err := h.RestaurantBusiness.MyRestoBusiness(int(idToken))
 
-	if err.Error() == "restaurant not found" {
+	if row == -1 {
 		return c.JSON(http.StatusNotFound, _helper.ResponseOkNoData("you don't have restaurant yet"))
 	}
 
