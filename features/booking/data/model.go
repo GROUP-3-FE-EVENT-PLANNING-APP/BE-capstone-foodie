@@ -56,3 +56,19 @@ func fromCore(core booking.Core) Booking {
 		Time:          core.Time,
 	}
 }
+
+func toCore(data Booking) booking.Core {
+	return booking.Core{
+		UserID:        data.UserID,
+		RestaurantID:  data.RestaurantID,
+		TransactionID: data.TransactionID,
+		OrderID:       data.OrderID,
+		TableQuota:    data.TableQuota,
+		BookingFee:    data.BookingFee,
+		PaymentStatus: data.PaymentStatus,
+		BookingStatus: data.BookingStatus,
+		Date:          data.Date,
+		Time:          data.Time,
+		UpdatedAt:     data.UpdatedAt,
+	}
+}
