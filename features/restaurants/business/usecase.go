@@ -114,11 +114,11 @@ func (uc *restaurantUseCase) DetailRestoBusiness(id int) (response restaurants.C
 	return response, err
 }
 
-func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (response restaurants.CoreMyDetail, err error) {
-	response, err = uc.restaurantData.MyRestoData(idUser)
+func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (row int, response restaurants.CoreMyDetail, err error) {
+	row, response, err = uc.restaurantData.MyRestoData(idUser)
 
-	if err.Error() == "restaurant not found" {
-		return restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
+	if row == -1 {
+		return -1, restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
 	}
 
 	if err == nil {
@@ -133,5 +133,5 @@ func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (response restaurants.C
 
 	}
 
-	return response, err
+	return row, response, err
 }

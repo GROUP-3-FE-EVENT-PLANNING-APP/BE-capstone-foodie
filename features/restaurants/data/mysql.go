@@ -253,20 +253,20 @@ func (repo *mysqlRestaurantRepository) DetailRestoData(id int) (response restaur
 	return dataResto.toCoreDetail(), nil
 }
 
-func (repo *mysqlRestaurantRepository) MyRestoData(idUser int) (response restaurants.CoreMyDetail, err error) {
+func (repo *mysqlRestaurantRepository) MyRestoData(idUser int) (row int, response restaurants.CoreMyDetail, err error) {
 	var dataResto RestaurantDetail
 
 	result := repo.db.Model(&Restaurant{}).Select("id, category, resto_name, location, status").Where("user_id = ?", idUser).First(&dataResto)
 
 	if result.RowsAffected != 1 {
-		return restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
+		return -1, restaurants.CoreMyDetail{}, fmt.Errorf("restaurant not found")
 	}
 
 	if result.Error != nil {
-		return restaurants.CoreMyDetail{}, result.Error
+		return 0, restaurants.CoreMyDetail{}, result.Error
 	}
 
-	return dataResto.toCoreMyResto(), nil
+	return int(result.RowsAffected), dataResto.toCoreMyResto(), nil
 }
 
 func (repo *mysqlRestaurantRepository) CheckTableQuotaData(idResto int) (response int, err error) {
