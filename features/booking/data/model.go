@@ -70,5 +70,9 @@ func toCore(data Booking) booking.Core {
 		Date:          data.Date,
 		Time:          data.Time,
 		UpdatedAt:     data.UpdatedAt,
+		User: booking.User{
+			Name:  data.User.Name,
+			Email: data.User.Email,
+		},
 	}
 }
