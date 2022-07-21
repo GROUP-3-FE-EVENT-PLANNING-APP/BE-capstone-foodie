@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"gopkg.in/gomail.v2"
+	gomail "gopkg.in/mail.v2"
 )
 
 type Recipient struct {
