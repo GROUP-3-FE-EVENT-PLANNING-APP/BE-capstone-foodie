@@ -13,13 +13,11 @@ type Recipient struct {
 	Name         string
 	Email        string
 	Handphone    string
-	TotalPayment uint64
+	TotalPayment string
 	PaymentTime  string
 }
 
 func SendEmail(data Recipient) {
-	data.OrderID = "7777777"
-
 	temp := `
 	<table>
 		<tr>
@@ -40,7 +38,7 @@ func SendEmail(data Recipient) {
 				Name 
 			</td>
 			<td>
-				: Syawal
+				: %s
 			</td>
 		</tr>
 		<tr>
@@ -48,7 +46,7 @@ func SendEmail(data Recipient) {
 				Total Payment
 			</td>
 			<td>
-			: Rp. 600.000
+			: %s
 			</td>
 		</tr>
 		<tr>
@@ -56,7 +54,7 @@ func SendEmail(data Recipient) {
 				Payment Time 
 			</td>
 			<td>
-				: 12-12-2022 12:00:00
+				: %s
 			</td>
 		</tr>
 		<tr>
@@ -76,7 +74,7 @@ func SendEmail(data Recipient) {
 	msg.SetHeader("From", "altacapstonegroup3@gmail.com")
 	msg.SetHeader("To", data.Email)
 	msg.SetHeader("Subject", "Notification Payment")
-	msg.SetBody("text/html", fmt.Sprintf(temp, data.OrderID))
+	msg.SetBody("text/html", fmt.Sprintf(temp, data.OrderID, data.Name, data.TotalPayment, data.PaymentTime))
 
 	n := gomail.NewDialer(host, port, email, password)
 

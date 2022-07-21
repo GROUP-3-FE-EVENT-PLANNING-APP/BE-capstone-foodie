@@ -4,6 +4,7 @@ import (
 	"capstone/group3/features/booking"
 	_helper "capstone/group3/helper"
 	"fmt"
+	"time"
 )
 
 type bookingUseCase struct {
@@ -68,14 +69,26 @@ func (uc *bookingUseCase) BookingRestoBusiness(data booking.Core) (row int, toke
 }
 
 func (uc *bookingUseCase) PaymentBusiness(data booking.PaymentWebhook) (row int, err error) {
-	row, err = uc.bookingData.PaymentData(data)
+	row, response, err := uc.bookingData.PaymentData(data)
+
+	//init the loc
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+
+	//set timezone,
+	convertGMT7 := response.UpdatedAt.In(loc)
+
+	convertString := convertGMT7.Format("02-01-2006 15:04:05")
+
+	// format rupiah
+	formatRupiah := _helper.FormatRupiah(response.BookingFee)
 
 	if row == 1 {
 		_helper.SendEmail(_helper.Recipient{
-			Name:         "awal",
-			Email:        "tesbahaso1503@gmail.com",
-			Handphone:    "08937737474",
-			TotalPayment: 600000,
+			Name:         response.User.Name,
+			Email:        response.User.Email,
+			OrderID:      response.OrderID,
+			TotalPayment: formatRupiah,
+			PaymentTime:  convertString,
 		})
 	}
 

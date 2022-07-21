@@ -92,21 +92,34 @@ func (repo *mysqlBookingRepository) GetUserData(idUser int) (response _helper.De
 	return response, err
 }
 
-func (repo *mysqlBookingRepository) PaymentData(data booking.PaymentWebhook) (response int, err error) {
+func (repo *mysqlBookingRepository) PaymentData(data booking.PaymentWebhook) (row int, response booking.Core, err error) {
+	var dataBooking Booking
 
 	if data.TransactionStatus != "settlement" {
-		return -1, fmt.Errorf("status not match")
+		return -1, booking.Core{}, fmt.Errorf("status not match")
 	}
 
-	result := repo.db.Table("bookings").Where("order_id = ?", data.OrderID).Update("payment_status", "accepted")
+	// update booking
+	updateBooking := repo.db.Table("bookings").Where("order_id = ?", data.OrderID).Update("payment_status", "accepted")
 
-	if result.Error != nil {
-		return 0, result.Error
+	if updateBooking.Error != nil {
+		return 0, booking.Core{}, updateBooking.Error
 	}
 
-	if result.RowsAffected != 1 {
-		return 0, fmt.Errorf("order_id not found")
+	if updateBooking.RowsAffected != 1 {
+		return 0, booking.Core{}, fmt.Errorf("order_id not found")
 	}
 
-	return int(result.RowsAffected), err
+	// get booking
+	getBooking := repo.db.Preload("User").Where("order_id = ?", data.OrderID).First(&dataBooking)
+
+	if getBooking.Error != nil {
+		return 0, booking.Core{}, getBooking.Error
+	}
+
+	if getBooking.RowsAffected != 1 {
+		return 0, booking.Core{}, fmt.Errorf("order_id not found")
+	}
+
+	return int(updateBooking.RowsAffected), toCore(dataBooking), err
 }

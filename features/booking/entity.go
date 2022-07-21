@@ -2,6 +2,7 @@ package booking
 
 import (
 	_helper "capstone/group3/helper"
+	"time"
 )
 
 type Core struct {
@@ -18,6 +19,7 @@ type Core struct {
 	MidtransRedirectURL string
 	Date                string
 	Time                string
+	UpdatedAt           time.Time
 }
 
 type User struct {
@@ -47,5 +49,5 @@ type Data interface {
 	CheckTableReservedData(idResto int) (response int, err error)
 	CheckTableQuotaData(idResto int) (response Restaurant, err error)
 	GetUserData(idUser int) (response _helper.DetailPayment, err error)
-	PaymentData(data PaymentWebhook) (row int, err error)
+	PaymentData(data PaymentWebhook) (row int, response Core, err error)
 }
