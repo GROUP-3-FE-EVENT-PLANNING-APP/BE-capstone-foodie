@@ -70,5 +70,14 @@ func (uc *bookingUseCase) BookingRestoBusiness(data booking.Core) (row int, toke
 func (uc *bookingUseCase) PaymentBusiness(data booking.PaymentWebhook) (row int, err error) {
 	row, err = uc.bookingData.PaymentData(data)
 
+	if row == 1 {
+		_helper.SendEmail(_helper.Recipient{
+			Name:         "awal",
+			Email:        "tesbahaso1503@gmail.com",
+			Handphone:    "08937737474",
+			TotalPayment: 600000,
+		})
+	}
+
 	return row, err
 }

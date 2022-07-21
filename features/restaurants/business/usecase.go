@@ -99,7 +99,7 @@ func (uc *restaurantUseCase) DetailRestoBusiness(id int) (response restaurants.C
 
 		// get facility
 		facilities, _ := uc.restaurantData.FacilitiesData(response.ID)
-		for i := 0; i < len(restoImgs); i++ {
+		for i := 0; i < len(facilities); i++ {
 			response.Facilities = append(response.Facilities, restaurants.Facility{Facility: facilities[i]})
 		}
 
