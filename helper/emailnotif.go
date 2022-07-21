@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"gopkg.in/gomail.v2"
+	gomail "gopkg.in/mail.v2"
 )
 
 type Recipient struct {
@@ -24,7 +24,7 @@ func SendEmail(data Recipient) {
 	msg.SetHeader("Subject", "Notification Payment")
 	msg.SetBody("text/html", "<b>This is the body of the mail</b>")
 
-	n := gomail.NewDialer(os.Getenv("GMAIL_SMTP_HOST"), 465, os.Getenv("GMAIL_AUTH_EMAIL"), os.Getenv("GMAIL_AUTH_PASSWORD"))
+	n := gomail.NewDialer(os.Getenv("GMAIL_SMTP_HOST"), 587, os.Getenv("GMAIL_AUTH_EMAIL"), os.Getenv("GMAIL_AUTH_PASSWORD"))
 
 	// Send the email
 	if err := n.DialAndSend(msg); err != nil {
