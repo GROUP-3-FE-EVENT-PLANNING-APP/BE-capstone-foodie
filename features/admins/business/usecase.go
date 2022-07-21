@@ -57,7 +57,7 @@ func (uc *adminUseCase) DetailRestoBusiness(id, idUser int) (response admins.Cor
 
 		// get facility
 		facilities, _ := uc.adminData.FacilitiesData(response.ID)
-		for i := 0; i < len(restoImgs); i++ {
+		for i := 0; i < len(facilities); i++ {
 			response.Facilities = append(response.Facilities, admins.Facility{Facility: facilities[i]})
 		}
 
