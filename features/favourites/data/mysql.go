@@ -73,12 +73,29 @@ func (repo *mysqlFavouriteRepository) DeleteFavDB(idResto, idFromToken int) (row
 
 func (repo *mysqlFavouriteRepository) AllRestoData(limitint, offsetint, idFromToken int) (response []favourites.RestoCore, err error) {
 	var dataFav []Favourite
+	var dataGet []Restaurant
 
-	result := repo.DB.Joins("Restaurant").Where("favourites.user_id = ?", idFromToken).Limit(limitint).Offset(offsetint).Order("created_at DESC").Find(&dataFav)
+	result := repo.DB.Model(&Favourite{}).Preload("Restaurant").Where("favourites.user_id = ?", idFromToken).Limit(limitint).Offset(offsetint).Order("created_at DESC").Find(&dataFav)
+
+	data := []int{}
+	for i := 0; i < len(dataFav); i++ {
+		data = append(data, dataFav[i].RestaurantID)
+
+	}
+
+	get := repo.DB.Order("id DESC").Find(&dataGet, data)
+
+	// result := repo.DB.Joins("Restaurant").Where("favourites.user_id = ?", idFromToken).Limit(limitint).Offset(offsetint).Order("created_at DESC").Find(&dataFav)
+
+	// result := repo.DB.Joins("JOIN restaurants on restaurants.id = favourites.restaurant_id").Where("favourites.user_id = ?", idFromToken).Limit(limitint).Offset(offsetint).Order("created_at DESC").Find(&dataFav)
 
 	if result.Error != nil {
 		return []favourites.RestoCore{}, result.Error
 	}
 
-	return toCoreList(dataFav), nil
+	if get.Error != nil {
+		return []favourites.RestoCore{}, get.Error
+	}
+
+	return toRestoCoreList(dataGet), nil
 }

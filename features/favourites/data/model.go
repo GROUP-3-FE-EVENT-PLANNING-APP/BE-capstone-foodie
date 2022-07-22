@@ -53,38 +53,6 @@ type RestoImage struct {
 
 // DTO
 
-// func (data *Favourite) toCore() favourites.Core {
-// 	return favourites.Core{
-// 		UserID: data.UserID,
-// 		RestaurantID: data.RestaurantID,
-// 	}
-// }
-
-// func toCoreList(data []Comments_Ratings) []comments.Core {
-// 	result := []comments.Core{}
-// 	for k := range data {
-// 		result = append(result, data[k].toCore())
-// 	}
-// 	return result
-// }
-
-// func FromCore(core comments.Core) Comments_Ratings {
-// 	return Comments_Ratings{
-// 		UserID: uint(core.User.ID),
-// 		User: User{
-// 			Name:      core.User.Name,
-// 			AvatarUrl: core.User.AvatarUrl,
-// 		},
-// 		RestaurantID: uint(core.Restaurant.ID),
-// 		Restaurant: Restaurant{
-// 			Name: core.Restaurant.Name,
-// 		},
-// 		Comment:   core.Comment,
-// 		Rating:    core.Rating,
-// 		CreatedAt: core.CreatedAt,
-// 	}
-// }
-
 func (data *Favourite) toCore_() favourites.RestoCore {
 	return favourites.RestoCore{
 		ID:        int(data.ID),
@@ -98,6 +66,23 @@ func toCoreList(data []Favourite) []favourites.RestoCore {
 	result := []favourites.RestoCore{}
 	for key := range data {
 		result = append(result, data[key].toCore_())
+	}
+	return result
+}
+
+func (data *Restaurant) toRestoCore_() favourites.RestoCore {
+	return favourites.RestoCore{
+		ID:        int(data.ID),
+		RestoName: data.RestoName,
+		Location:  data.Location,
+		Category:  data.Category,
+	}
+}
+
+func toRestoCoreList(data []Restaurant) []favourites.RestoCore {
+	result := []favourites.RestoCore{}
+	for key := range data {
+		result = append(result, data[key].toRestoCore_())
 	}
 	return result
 }
