@@ -55,8 +55,9 @@ type RestoImage struct {
 
 func (data *Favourite) toCore_() favourites.RestoCore {
 	return favourites.RestoCore{
-		ID:        int(data.ID),
+		ID:        int(data.RestaurantID),
 		RestoName: data.Restaurant.RestoName,
+		Rating:    data.Restaurant.Rating,
 		Location:  data.Restaurant.Location,
 		Category:  data.Restaurant.Category,
 	}
