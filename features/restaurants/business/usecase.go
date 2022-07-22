@@ -23,7 +23,7 @@ func (uc *restaurantUseCase) CreateRestoBusiness(newData restaurants.Core) (resp
 }
 
 func (uc *restaurantUseCase) UpdateRestoBusiness(editData restaurants.Core, idUser int) (response int, err error) {
-	if editData.RestoName == "" || editData.Location == "" || editData.MenuImageUrl == "" || editData.Category == "" || editData.TableQuota == 0 || editData.BookingFee == 0 || editData.Latitude == "" || editData.Longitude == "" || editData.Facility == "" {
+	if editData.RestoName == "" || editData.Location == "" || editData.MenuImageUrl == "" || editData.Category == "" || editData.TableQuota == 0 || editData.BookingFee == 0 || editData.Facility == "" {
 		return 0, errors.New("all input data must be filled")
 	}
 
