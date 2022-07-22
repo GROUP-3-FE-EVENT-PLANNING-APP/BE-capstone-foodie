@@ -49,5 +49,5 @@ type Data interface {
 	CheckTableReservedData(idResto int) (response int, err error)
 	CheckTableQuotaData(idResto int) (response Restaurant, err error)
 	GetUserData(idUser int) (response _helper.DetailPayment, err error)
-	PaymentData(data PaymentWebhook) (row int, response Core, err error)
+	PaymentData(data PaymentWebhook) (row int, response Core, email, name string, err error)
 }

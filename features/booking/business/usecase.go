@@ -69,7 +69,7 @@ func (uc *bookingUseCase) BookingRestoBusiness(data booking.Core) (row int, toke
 }
 
 func (uc *bookingUseCase) PaymentBusiness(data booking.PaymentWebhook) (row int, err error) {
-	row, response, err := uc.bookingData.PaymentData(data)
+	row, response, email, name, err := uc.bookingData.PaymentData(data)
 
 	//init the loc
 	loc, _ := time.LoadLocation("Asia/Jakarta")
@@ -81,11 +81,11 @@ func (uc *bookingUseCase) PaymentBusiness(data booking.PaymentWebhook) (row int,
 
 	// format rupiah
 	formatRupiah := _helper.FormatRupiah(response.BookingFee)
-
+	fmt.Println("useremail: ", response.User.Email)
 	if row == 1 {
 		_helper.SendEmail(_helper.Recipient{
-			Name:         response.User.Name,
-			Email:        response.User.Email,
+			Name:         name,
+			Email:        email,
 			OrderID:      response.OrderID,
 			TotalPayment: formatRupiah,
 			PaymentTime:  convertString,
