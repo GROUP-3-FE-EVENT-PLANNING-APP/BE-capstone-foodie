@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>data: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">capstone/group3/features/users/data/model.go (16.7%)</option>
+				
+				<option value="file1">capstone/group3/features/users/data/mysql.go (18.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package data
+
+import (
+        "capstone/group3/features/users"
+
+        "gorm.io/gorm"
+)
+
+type User struct {
+        gorm.Model
+        Name      string
+        Email     string `gorm:"unique"`
+        Password  string
+        AvatarUrl string
+        Handphone string `gorm:"unique"`
+        Role      string `gorm:"default:user"`
+}
+
+// DTO
+
+func (data *User) toCore() users.Core <span class="cov0" title="0">{
+        return users.Core{
+                ID:        int(data.ID),
+                Name:      data.Name,
+                Email:     data.Email,
+                Password:  data.Password,
+                AvatarUrl: data.AvatarUrl,
+                Handphone: data.Handphone,
+                Role:      data.Role,
+                CreatedAt: data.CreatedAt,
+                UpdatedAt: data.UpdatedAt,
+        }
+}</span>
+
+func toCoreList(data []User) []users.Core <span class="cov0" title="0">{
+        result := []users.Core{}
+        for k := range data </span><span class="cov0" title="0">{
+                result = append(result, data[k].toCore())
+        }</span>
+        <span class="cov0" title="0">return result</span>
+}
+
+func FromCore(core users.Core) User <span class="cov8" title="1">{
+        return User{
+                Name:      core.Name,
+                Email:     core.Email,
+                Password:  core.Password,
+                AvatarUrl: core.AvatarUrl,
+                Handphone: core.Handphone,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package data
+
+import (
+        "capstone/group3/features/middlewares"
+        "capstone/group3/features/users"
+        "errors"
+        "fmt"
+
+        _bcrypt "golang.org/x/crypto/bcrypt"
+        "gorm.io/gorm"
+)
+
+type mysqlUserRepository struct {
+        DB *gorm.DB
+}
+
+func NewUserRepository(db *gorm.DB) users.Data <span class="cov8" title="1">{
+        return &amp;mysqlUserRepository{
+                DB: db,
+        }
+}</span>
+
+func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err error) <span class="cov8" title="1">{
+        user := FromCore(input)
+        passwordHashed, errorHash := _bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+        if errorHash != nil </span><span class="cov0" title="0">{
+                fmt.Println("Error hash", errorHash.Error())
+        }</span>
+        <span class="cov8" title="1">user.Password = string(passwordHashed)
+        resultcreate := repo.DB.Create(&amp;user)
+        if resultcreate.Error != nil </span><span class="cov0" title="0">{
+                return 0, resultcreate.Error
+        }</span>
+        <span class="cov8" title="1">if resultcreate.RowsAffected != 1 </span><span class="cov0" title="0">{
+                return 0, errors.New("failed to insert data, your email is already registered")
+        }</span>
+        <span class="cov8" title="1">return int(resultcreate.RowsAffected), nil</span>
+}
+
+func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (data map[string]interface{}, err error) <span class="cov0" title="0">{
+        userData := User{}
+        result := repo.DB.Where("email = ?", authData.Email).First(&amp;userData)
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return nil, result.Error
+        }</span>
+
+        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+                return nil, errors.New("failed to login")
+        }</span>
+
+        <span class="cov0" title="0">errCrypt := _bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(authData.Password))
+        if errCrypt != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("password incorrect")
+        }</span>
+
+        <span class="cov0" title="0">token, errToken := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
+        if errToken != nil </span><span class="cov0" title="0">{
+                return nil, errToken
+        }</span>
+        <span class="cov0" title="0">var dataToken = map[string]interface{}{}
+        dataToken["id"] = int(userData.ID)
+        dataToken["token"] = token
+        dataToken["name"] = userData.Name
+        dataToken["avatarUrl"] = userData.AvatarUrl
+        dataToken["role"] = userData.Role
+        dataToken["handphone"] = userData.Handphone
+        dataToken["email"] = userData.Email
+        return dataToken, nil</span>
+}
+
+func (repo *mysqlUserRepository) UpdateDataDB(data map[string]interface{}, idFromToken int) (row int, err error) <span class="cov0" title="0">{
+        result := repo.DB.Model(&amp;User{}).Where("id = ?", idFromToken).Updates(data)
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return 0, result.Error
+        }</span>
+
+        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+                return 0, errors.New("failed to update data")
+        }</span>
+
+        <span class="cov0" title="0">return int(result.RowsAffected), nil</span>
+}
+
+func (repo *mysqlUserRepository) SelectDataByMe(idFromToken int) (data users.Core, err error) <span class="cov0" title="0">{
+        dataUser := User{}
+        result := repo.DB.Find(&amp;dataUser, idFromToken)
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return users.Core{}, result.Error
+        }</span>
+        <span class="cov0" title="0">return dataUser.toCore(), nil</span>
+}
+
+func (repo *mysqlUserRepository) DeleteDataByIdDB(idFromToken int) (row int, err error) <span class="cov0" title="0">{
+        result := repo.DB.Delete(&amp;User{}, idFromToken)
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return 0, result.Error
+        }</span>
+        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+                return 0, errors.New("failed to delete data")
+        }</span>
+        <span class="cov0" title="0">return int(result.RowsAffected), nil</span>
+
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
