@@ -185,15 +185,15 @@ https://hub.docker.com/repository/docker/dwiatmoko/group3-api
 - Dwiatmoko Purbosakti
        
   Reach me:
-  [![LinkedIn](https://img.shields.io/badge/Dwiatmoko-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/dwi-atmoko-purbo-sakti-573b861ba/)
-  [![GitHub](https://img.shields.io/badge/Dwiatmoko-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dpurbosakti)
-  [![Twitter](https://img.shields.io/badge/Dwiatmoko-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/dpurbosakti)
+  [![LinkedIn](https://img.shields.io/badge/Dwiatmoko.Purbosakti-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/dwi-atmoko-purbo-sakti-573b861ba/)
+  [![GitHub](https://img.shields.io/badge/dpurbosakti-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dpurbosakti)
+  [![Twitter](https://img.shields.io/badge/dpurbosakti-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/dpurbosakti)
        
 - Syawal Adiyaksa
        
   Reach me:
-  [![LinkedIn](https://img.shields.io/badge/Syawal-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/syawal-adiyaksa/)
-  [![GitHub](https://img.shields.io/badge/Syawal-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/syawaladiyaksa15)
+  [![LinkedIn](https://img.shields.io/badge/Syawal.Adiyaksa-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/syawal-adiyaksa/)
+  [![GitHub](https://img.shields.io/badge/syawaladiyaksa15-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/syawaladiyaksa15)
   
        
  <p align="right">(<a href="#top">back to top</a>)</p>
