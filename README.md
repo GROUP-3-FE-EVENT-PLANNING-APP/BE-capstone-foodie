@@ -56,6 +56,7 @@ At restaurants, there are features for CRUD the restaurant and booking the resta
 | GET | /myresto | - | YES | get the restaurant information that he/her owned |
 | POST | /restaurants/booking  | restaurant id | YES | to book the restaurant |
 | POST | /restaurants/upload  | - | YES | to upload retaurant images |
+| GET | /search-restaurant  | search | NO | search the restaurant |
 
 
 </details>
@@ -161,7 +162,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd BE-capstone-foodie.git
+  cd BE-capstone-foodie
 ```
 
 ## Open Api

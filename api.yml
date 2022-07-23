@@ -890,6 +890,82 @@ paths:
                       message: "please make sure all fields are filled in correctly",
                     }      
   
+  /search-restaurant:
+    get:
+      tags:
+        - Restaurants
+      description: fitur untuk searching restaurant
+      parameters: 
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: keyword for searching
+         
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 
+                  value:
+                   data: [{
+                      resto_id: 1,
+                      resto_name: "depot puas",
+                      location: "surabaya",
+                      category: "halal",
+                      table_quota: 30,
+                      rating: 4,
+                      resto_images: [
+                        {
+                        resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"
+                          
+                        }
+                        ],
+                      
+                     
+                      
+                      
+                      
+                    }
+                    ,
+                    {
+                      resto_id: 1,
+                      resto_name: "depot nikmat",
+                      location: "jakarta",
+                      category: "non halal",
+                      
+                      table_quota: 40,
+                      rating: 5,
+                      resto_images: [
+                        {
+                        resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"
+                          
+                        }
+                        ],
+                    }
+                    ]
+                    
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+  
+  
   #admin
   /admins/users:
     get:
