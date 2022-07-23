@@ -39,6 +39,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("/restaurants", presenter.RestaurantPresenter.AllResto)
 	e.GET("/restaurants/:id", presenter.RestaurantPresenter.DetailResto)
 	e.GET("/myresto", presenter.RestaurantPresenter.MyResto, _middleware.JWTMiddleware())
+	e.GET("/search-restaurant", presenter.RestaurantPresenter.SearchResto)
 
 	// comments and ratings
 	e.POST("/comments/:id", presenter.CommentPresenter.PostComment, _middleware.JWTMiddleware())

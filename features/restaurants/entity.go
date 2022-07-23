@@ -96,6 +96,7 @@ type Business interface {
 	AllRestoBusiness(limit, offset int) (result []CoreList, err error)
 	DetailRestoBusiness(id int) (result CoreDetail, err error)
 	MyRestoBusiness(id int) (row int, result CoreMyDetail, err error)
+	SearchRestoBusiness(search string) (result []CoreList, err error)
 }
 
 type Data interface {
@@ -113,4 +114,5 @@ type Data interface {
 	CommentsData(idResto int) (result []Comment, err error)
 	MyRestoData(id int) (row int, result CoreMyDetail, err error)
 	CheckTableQuotaData(id int) (result int, err error)
+	SearchRestoData(search string) (result []CoreList, err error)
 }
