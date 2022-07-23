@@ -144,7 +144,10 @@ At Comments and Ratings, there are features for post the comment and rating, get
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
          
-       
+## 🗃️ ERD
+
+<img src="capstone_erd.png">
+      
        
 
 ## Run Locally
