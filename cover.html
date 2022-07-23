@@ -57,7 +57,9 @@
 				
 				<option value="file0">capstone/group3/features/comments/business/usecase.go (100.0%)</option>
 				
-				<option value="file1">capstone/group3/features/users/business/usecase.go (96.0%)</option>
+				<option value="file1">capstone/group3/features/favourites/business/usecase.go (100.0%)</option>
+				
+				<option value="file2">capstone/group3/features/users/business/usecase.go (96.0%)</option>
 				
 				</select>
 			</div>
@@ -113,6 +115,53 @@ func (uc *commentUseCase) GetRatingByIdResto(idResto int) (rating float64, err e
 </pre>
 		
 		<pre class="file" id="file1" style="display: none">package business
+
+import (
+        "capstone/group3/features/favourites"
+)
+
+type favouriteUseCase struct {
+        favouriteData favourites.Data
+}
+
+func NewFavouriteBusiness(dataFav favourites.Data) favourites.Business <span class="cov8" title="1">{
+        return &amp;favouriteUseCase{
+                favouriteData: dataFav,
+        }
+}</span>
+
+func (uc *favouriteUseCase) AddFav(idResto, idFromToken int) (row int, err error) <span class="cov8" title="1">{
+        row, err = uc.favouriteData.AddFavDB(idResto, idFromToken)
+        return row, err
+}</span>
+
+func (uc *favouriteUseCase) DeleteFavourite(idResto, idFromToken int) (row int, err error) <span class="cov8" title="1">{
+        row, err = uc.favouriteData.DeleteFavDB(idResto, idFromToken)
+        return row, err
+}</span>
+
+func (uc *favouriteUseCase) GetMyFav(limitint, offsetint, idFromToken int) (response []favourites.RestoCore, err error) <span class="cov8" title="1">{
+        response, err = uc.favouriteData.AllRestoData(limitint, offsetint, idFromToken)
+
+        if err == nil </span><span class="cov8" title="1">{
+                for i := 0; i &lt; len(response); i++ </span><span class="cov8" title="1">{
+
+                        // get rating
+                        rating, _ := uc.favouriteData.RatingData(response[i].ID)
+                        response[i].Rating = rating
+
+                        // get resto image url
+                        restoImg, _ := uc.favouriteData.RestoImageData(response[i].ID)
+
+                        response[i].RestoImages = restoImg
+                }</span>
+        }
+
+        <span class="cov8" title="1">return response, err</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package business
 
 import (
         "capstone/group3/features/users"
