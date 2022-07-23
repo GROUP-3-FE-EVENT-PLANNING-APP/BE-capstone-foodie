@@ -1,6 +1,7 @@
 package business
 
 import (
+	"capstone/group3/features/favourites"
 	"capstone/group3/mocks"
 	"testing"
 
@@ -38,24 +39,28 @@ func TestDeleteFavDB(t *testing.T) {
 
 }
 
-// func TestAllRestoData(t *testing.T) {
-// 	repo := new(mocks.FavouriteData)
+func TestAllRestoData(t *testing.T) {
+	repo := new(mocks.FavouriteData)
 
-// 	dataRestoCore := []favourites.RestoCore{
-// 		{
-// 			ID:          1,
-// 			Rating:      4.5,
-// 			RestoImages: "foto",
-// 		},
-// 	}
+	dataRestoCore := []favourites.RestoCore{
+		{
+			ID:          1,
+			Rating:      4.5,
+			RestoImages: "foto",
+		},
+	}
 
-// 	t.Run("Success Get My Fav", func(t *testing.T) {
-// 		repo.On("AllRestoData", mock.Anything, mock.Anything, mock.Anything).Return(dataRestoCore, nil).Once()
-// 		srv := NewFavouriteBusiness(repo)
+	t.Run("Success Get My Fav", func(t *testing.T) {
+		repo.On("RatingData", mock.Anything, mock.Anything, mock.Anything).Return(4.5, nil).Once()
 
-// 		res, err := srv.GetMyFav(1, 0, 1)
-// 		assert.NoError(t, err)
-// 		assert.Equal(t, 4.5, res[0].Rating)
-// 		repo.AssertExpectations(t)
-// 	})
-// }
+		repo.On("RestoImageData", mock.Anything, mock.Anything, mock.Anything).Return("foto", nil).Once()
+
+		repo.On("AllRestoData", mock.Anything, mock.Anything, mock.Anything).Return(dataRestoCore, nil).Once()
+		srv := NewFavouriteBusiness(repo)
+
+		res, err := srv.GetMyFav(1, 0, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, 4.5, res[0].Rating)
+		repo.AssertExpectations(t)
+	})
+}

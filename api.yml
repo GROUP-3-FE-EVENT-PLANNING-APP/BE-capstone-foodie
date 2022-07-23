@@ -8,6 +8,7 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/dpurbosakti/wisatafoodie/1.0.0
   - url: 54.197.118.126
+  - url: https://group3.altaproject.online
 tags:
   - name: Authentication
   - name: Users
@@ -398,7 +399,7 @@ paths:
                   value:
                     [{
                       resto_id: 1,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
                       category: "halal",
                       resto_name: "depot puas",
                       location: "surabaya"
@@ -406,13 +407,22 @@ paths:
                     ,
                     { 
                       resto_id: 2,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg", "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
                       category: "halal",
                       resto_name: "depot puas",
                       location: "surabaya"
                     }
                     ]
-
+        "404":
+          description: success but empty value
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    message: "your favorites list is empty"
         "400":
           description: Failed Response
           content:
@@ -624,7 +634,12 @@ paths:
                   value:
                     [{
                       resto_id: 1,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      resto_images: [
+                        {
+                        resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"
+                          
+                        }
+                        ],
                       category: "halal",
                       resto_name: "depot puas",
                       location: "surabaya",
@@ -634,7 +649,12 @@ paths:
                     ,
                     {
                       resto_id: 1,
-                      resto_image_url: ["https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"],
+                      resto_images: [
+                        {
+                        resto_image_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg"
+                          
+                        }
+                        ],
                       category: "non halal",
                       resto_name: "depot nikmat",
                       location: "jakarta",
@@ -748,11 +768,18 @@ paths:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "bad request" }
   
-  /restaurants/booking:
+  /restaurants/booking/{idrestaurant}:
     post:
       tags:
         - Restaurants
       description: fitur untuk booking restaurant
+      parameters:
+        - in: path
+          name: idrestaurant
+          schema:
+            type: integer
+          required: true
+          description: id restaurant untuk melihat detail restaurant
       security:
         - JWTAuth: []
       requestBody:
@@ -781,9 +808,12 @@ paths:
                   description: response success 1
                   value:
                     {
-                      code: 200,
-                      status: "success",
-                      message: "success operation create data",
+                      data: {
+                        token: "f7106be4-cd50-424b-a7c2-027e677de1ae",
+                        redirect_url: "https://app.sandbox.midtrans.com/snap/v3/redirection/f7106be4-cd50-424b-a7c2-027e677de1ae"
+                      },
+                      message: "success"
+
                     }
             image/png:
                   schema:
@@ -1023,7 +1053,13 @@ paths:
                       resto_name: "depot puas",
                       email: dwi@mail.com,
                       handphone: "085608560856",
-                      facility: ["mushollah", "wc", "karaoke"],
+                      facilities: [
+                        {
+                        facility:  "mushollah"
+                          
+                        },
+                        facility: "wc"
+                        ],
                       category: "halal",
                       table_quota: 30,
                       booking_fee: 50000,
@@ -1188,6 +1224,7 @@ paths:
                       created_at: "2022-07-15T13:12:36.333+07:00"
                       }
                       ]
+                      
           "400":
             description: Failed Response
             content:
@@ -1203,7 +1240,7 @@ paths:
                         status: "failed",
                         message: "failed to add comment and rating",
                       }    
-
+          
   /comments/rating/{idrestaurant}:
     get:
       tags:
