@@ -359,3 +359,14 @@ func (h *RestaurantHandler) MyResto(c echo.Context) error {
 	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreDetailMyResto(result)))
 
 }
+
+func (h *RestaurantHandler) SearchResto(c echo.Context) error {
+	search := c.QueryParam("search")
+
+	result, err := h.RestaurantBusiness.SearchRestoBusiness(search)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to search data"))
+	}
+	return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", _responseRestaurant.FromCoreList(result)))
+}

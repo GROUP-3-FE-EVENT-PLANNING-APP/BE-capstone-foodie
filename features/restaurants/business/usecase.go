@@ -135,3 +135,23 @@ func (uc *restaurantUseCase) MyRestoBusiness(idUser int) (row int, response rest
 
 	return row, response, err
 }
+
+func (uc *restaurantUseCase) SearchRestoBusiness(search string) (response []restaurants.CoreList, err error) {
+	response, err = uc.restaurantData.SearchRestoData(search)
+
+	if err == nil {
+		for i := 0; i < len(response); i++ {
+
+			// get rating
+			rating, _ := uc.restaurantData.RatingData(response[i].ID)
+			response[i].Rating = rating
+
+			// get resto image url
+			restoImg, _ := uc.restaurantData.RestoImageData(response[i].ID)
+
+			response[i].RestoImages = append(response[i].RestoImages, restaurants.RestoImage{RestoImageUrl: restoImg})
+		}
+	}
+
+	return response, err
+}

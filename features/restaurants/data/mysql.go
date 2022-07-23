@@ -341,3 +341,15 @@ func (repo *mysqlRestaurantRepository) CheckTableQuotaData(idResto int) (respons
 
 	return tableQouta, nil
 }
+
+func (repo *mysqlRestaurantRepository) SearchRestoData(search string) (response []restaurants.CoreList, err error) {
+	var dataResto []Restaurant
+
+	result := repo.db.Preload("RestoImages").Model(&Restaurant{}).Select("id, category, resto_name, location, table_quota").Where("status = ?", "verified").Order("id desc").Where("resto_name like ?", "%"+search+"%").Find(&dataResto)
+
+	if result.Error != nil {
+		return []restaurants.CoreList{}, result.Error
+	}
+
+	return toCoreList(dataResto), nil
+}
