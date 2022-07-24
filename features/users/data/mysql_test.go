@@ -110,6 +110,16 @@ func TestUpdateDataDB(t *testing.T) {
 		assert.Equal(t, 0, row)
 	})
 
+	db.Migrator().DropTable(&User{})
+
+	t.Run("Test Update User Failed db", func(t *testing.T) {
+		mockUser := map[string]interface{}{}
+		mockUser["name"] = "dwiatmoko"
+		row, err := repo.UpdateDataDB(mockUser, 2)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
+	})
+
 }
 
 func TestSelectDataByMe(t *testing.T) {
@@ -134,11 +144,13 @@ func TestSelectDataByMe(t *testing.T) {
 		assert.Equal(t, "dwi", result.Name)
 	})
 
-	// t.Run("Test Get My Profile", func(t *testing.T) {
-	// 	row, err := repo.SelectDataByMe(3)
-	// 	assert.NotNil(t, err)
-	// 	assert.Equal(t, users.Core{}, row)
-	// })
+	db.Migrator().DropTable(&User{})
+
+	t.Run("Test Get My Profile Failed", func(t *testing.T) {
+		row, err := repo.SelectDataByMe(3)
+		assert.NotNil(t, err)
+		assert.Equal(t, users.Core{}, row)
+	})
 
 }
 
@@ -170,4 +182,11 @@ func TestDeleteDataByIdDB(t *testing.T) {
 		assert.Equal(t, 0, row)
 	})
 
+	db.Migrator().DropTable(&User{})
+
+	t.Run("Test Delete Account Failed db", func(t *testing.T) {
+		row, err := repo.DeleteDataByIdDB(1)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
+	})
 }
