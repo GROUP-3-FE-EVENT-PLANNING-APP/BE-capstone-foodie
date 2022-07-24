@@ -55,9 +55,9 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">capstone/group3/features/users/data/model.go (16.7%)</option>
+				<option value="file0">capstone/group3/features/users/data/model.go (33.3%)</option>
 				
-				<option value="file1">capstone/group3/features/users/data/mysql.go (18.0%)</option>
+				<option value="file1">capstone/group3/features/users/data/mysql.go (84.0%)</option>
 				
 				</select>
 			</div>
@@ -91,7 +91,7 @@ type User struct {
 
 // DTO
 
-func (data *User) toCore() users.Core <span class="cov0" title="0">{
+func (data *User) toCore() users.Core <span class="cov8" title="1">{
         return users.Core{
                 ID:        int(data.ID),
                 Name:      data.Name,
@@ -154,7 +154,7 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
         }</span>
         <span class="cov8" title="1">user.Password = string(passwordHashed)
         resultcreate := repo.DB.Create(&amp;user)
-        if resultcreate.Error != nil </span><span class="cov0" title="0">{
+        if resultcreate.Error != nil </span><span class="cov8" title="1">{
                 return 0, resultcreate.Error
         }</span>
         <span class="cov8" title="1">if resultcreate.RowsAffected != 1 </span><span class="cov0" title="0">{
@@ -163,27 +163,27 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
         <span class="cov8" title="1">return int(resultcreate.RowsAffected), nil</span>
 }
 
-func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (data map[string]interface{}, err error) <span class="cov0" title="0">{
+func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (data map[string]interface{}, err error) <span class="cov8" title="1">{
         userData := User{}
         result := repo.DB.Where("email = ?", authData.Email).First(&amp;userData)
-        if result.Error != nil </span><span class="cov0" title="0">{
+        if result.Error != nil </span><span class="cov8" title="1">{
                 return nil, result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
                 return nil, errors.New("failed to login")
         }</span>
 
-        <span class="cov0" title="0">errCrypt := _bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(authData.Password))
+        <span class="cov8" title="1">errCrypt := _bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(authData.Password))
         if errCrypt != nil </span><span class="cov0" title="0">{
                 return nil, errors.New("password incorrect")
         }</span>
 
-        <span class="cov0" title="0">token, errToken := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
+        <span class="cov8" title="1">token, errToken := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
         if errToken != nil </span><span class="cov0" title="0">{
                 return nil, errToken
         }</span>
-        <span class="cov0" title="0">var dataToken = map[string]interface{}{}
+        <span class="cov8" title="1">var dataToken = map[string]interface{}{}
         dataToken["id"] = int(userData.ID)
         dataToken["token"] = token
         dataToken["name"] = userData.Name
@@ -194,37 +194,37 @@ func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (da
         return dataToken, nil</span>
 }
 
-func (repo *mysqlUserRepository) UpdateDataDB(data map[string]interface{}, idFromToken int) (row int, err error) <span class="cov0" title="0">{
+func (repo *mysqlUserRepository) UpdateDataDB(data map[string]interface{}, idFromToken int) (row int, err error) <span class="cov8" title="1">{
         result := repo.DB.Model(&amp;User{}).Where("id = ?", idFromToken).Updates(data)
         if result.Error != nil </span><span class="cov0" title="0">{
                 return 0, result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if result.RowsAffected != 1 </span><span class="cov8" title="1">{
                 return 0, errors.New("failed to update data")
         }</span>
 
-        <span class="cov0" title="0">return int(result.RowsAffected), nil</span>
+        <span class="cov8" title="1">return int(result.RowsAffected), nil</span>
 }
 
-func (repo *mysqlUserRepository) SelectDataByMe(idFromToken int) (data users.Core, err error) <span class="cov0" title="0">{
+func (repo *mysqlUserRepository) SelectDataByMe(idFromToken int) (data users.Core, err error) <span class="cov8" title="1">{
         dataUser := User{}
         result := repo.DB.Find(&amp;dataUser, idFromToken)
         if result.Error != nil </span><span class="cov0" title="0">{
                 return users.Core{}, result.Error
         }</span>
-        <span class="cov0" title="0">return dataUser.toCore(), nil</span>
+        <span class="cov8" title="1">return dataUser.toCore(), nil</span>
 }
 
-func (repo *mysqlUserRepository) DeleteDataByIdDB(idFromToken int) (row int, err error) <span class="cov0" title="0">{
+func (repo *mysqlUserRepository) DeleteDataByIdDB(idFromToken int) (row int, err error) <span class="cov8" title="1">{
         result := repo.DB.Delete(&amp;User{}, idFromToken)
         if result.Error != nil </span><span class="cov0" title="0">{
                 return 0, result.Error
         }</span>
-        <span class="cov0" title="0">if result.RowsAffected != 1 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if result.RowsAffected != 1 </span><span class="cov8" title="1">{
                 return 0, errors.New("failed to delete data")
         }</span>
-        <span class="cov0" title="0">return int(result.RowsAffected), nil</span>
+        <span class="cov8" title="1">return int(result.RowsAffected), nil</span>
 
 }
 </pre>

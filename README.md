@@ -162,7 +162,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd BE-capstone-foodie.git
+  cd BE-capstone-foodie
 ```
 
 ## Open Api
