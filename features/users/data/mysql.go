@@ -31,9 +31,7 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 	if resultcreate.Error != nil {
 		return 0, resultcreate.Error
 	}
-	if resultcreate.RowsAffected != 1 {
-		return 0, errors.New("failed to insert data, your email is already registered")
-	}
+
 	return int(resultcreate.RowsAffected), nil
 }
 
@@ -44,19 +42,13 @@ func (repo *mysqlUserRepository) LoginUserDB(authData users.AuthRequestData) (da
 		return nil, result.Error
 	}
 
-	if result.RowsAffected != 1 {
-		return nil, errors.New("failed to login")
-	}
-
 	errCrypt := _bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(authData.Password))
 	if errCrypt != nil {
 		return nil, errors.New("password incorrect")
 	}
 
-	token, errToken := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
-	if errToken != nil {
-		return nil, errToken
-	}
+	token, _ := middlewares.CreateToken(int(userData.ID), userData.AvatarUrl, userData.Role, userData.Handphone, userData.Email)
+
 	var dataToken = map[string]interface{}{}
 	dataToken["id"] = int(userData.ID)
 	dataToken["token"] = token

@@ -2,7 +2,6 @@ package data
 
 import (
 	"capstone/group3/features/comments"
-	"errors"
 
 	"gorm.io/gorm"
 )
@@ -22,9 +21,6 @@ func (repo *mysqlCommentRepository) InsertComment(input comments.Core) (row int,
 	resultInsert := repo.DB.Create(&comment)
 	if resultInsert.Error != nil {
 		return 0, resultInsert.Error
-	}
-	if resultInsert.RowsAffected != 1 {
-		return 0, errors.New("failed to insert comment")
 	}
 	return int(resultInsert.RowsAffected), nil
 }

@@ -11,10 +11,8 @@ import (
 
 func TestInsertComment(t *testing.T) {
 	db := config.InitDBTest()
-	db.Migrator().DropTable(&Comments_Ratings{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Restaurant{})
-	db.AutoMigrate(&Comments_Ratings{})
+	db.Migrator().DropTable(&Comments_Ratings{}, &Restaurant{}, &User{})
+	db.AutoMigrate(&User{}, &Restaurant{}, &Comments_Ratings{})
 
 	db.Create(&User{Name: "dwi"})
 	db.Create(&Restaurant{RestoName: "depot puas"})
@@ -32,27 +30,23 @@ func TestInsertComment(t *testing.T) {
 		assert.Equal(t, 1, row)
 	})
 
-	// t.Run("Test Post Comment Failed", func(t *testing.T) {
-	// 	mockUser := comments.Core{User: comments.User{ID: 1},
-	// 		Restaurant: comments.Restaurant{ID: 2},
-	// 		Comment:    "bagus",
-	// 		Rating:     5,
-	// 	}
-	// 	row, err := repo.InsertComment(mockUser)
-	// 	assert.NotNil(t, err)
-	// 	assert.Equal(t, 0, row)
-	// })
+	t.Run("Test Post Comment Failed Resto ID not found", func(t *testing.T) {
+		mockUser := comments.Core{User: comments.User{ID: 1},
+			Restaurant: comments.Restaurant{ID: 2},
+			Comment:    "bagus",
+			Rating:     5,
+		}
+		row, err := repo.InsertComment(mockUser)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, row)
+	})
 
 }
 
 func TestSelectCommentByIdResto(t *testing.T) {
 	db := config.InitDBTest()
-	db.Migrator().DropTable(&Comments_Ratings{})
-	db.Migrator().DropTable(&Restaurant{})
-	db.Migrator().DropTable(&User{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Restaurant{})
-	db.AutoMigrate(&Comments_Ratings{})
+	db.Migrator().DropTable(&Comments_Ratings{}, &Restaurant{}, &User{})
+	db.AutoMigrate(&User{}, &Restaurant{}, &Comments_Ratings{})
 
 	db.Create(&User{Name: "dwi"})
 	db.Create(&Restaurant{RestoName: "depot puas"})
@@ -76,23 +70,21 @@ func TestSelectCommentByIdResto(t *testing.T) {
 		assert.Equal(t, "keren", result[0].Comment)
 	})
 
-	// t.Run("Test Create User", func(t *testing.T) {
+	db.Migrator().DropTable(&Comments_Ratings{})
 
-	// 	resultfailed, errfailed := repo.SelectCommentByIdResto(2, 1, 0)
-	// 	assert.NotNil(t, errfailed)
-	// 	assert.Equal(t, []comments.Core{}, resultfailed)
-	// })
+	t.Run("Test Create User", func(t *testing.T) {
+
+		resultfailed, errfailed := repo.SelectCommentByIdResto(2, 1, 0)
+		assert.NotNil(t, errfailed)
+		assert.Equal(t, []comments.Core{}, resultfailed)
+	})
 
 }
 
 func TestSelectRatingByIdResto(t *testing.T) {
 	db := config.InitDBTest()
-	db.Migrator().DropTable(&Comments_Ratings{})
-	db.Migrator().DropTable(&Restaurant{})
-	db.Migrator().DropTable(&User{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Restaurant{})
-	db.AutoMigrate(&Comments_Ratings{})
+	db.Migrator().DropTable(&Comments_Ratings{}, &Restaurant{}, &User{})
+	db.AutoMigrate(&User{}, &Restaurant{}, &Comments_Ratings{})
 
 	db.Create(&User{Name: "dwi"})
 	db.Create(&Restaurant{RestoName: "depot puas"})
@@ -116,11 +108,13 @@ func TestSelectRatingByIdResto(t *testing.T) {
 		assert.Equal(t, 4.5, result)
 	})
 
-	// t.Run("Test Create User", func(t *testing.T) {
+	db.Migrator().DropTable(&Comments_Ratings{})
 
-	// 	result, err := repo.SelectRatingByIdResto(2)
-	// 	assert.NotNil(t, err)
-	// 	assert.Equal(t, 0.0, result)
-	// })
+	t.Run("Test Get Rating Failed", func(t *testing.T) {
+
+		result, err := repo.SelectRatingByIdResto(2)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0.0, result)
+	})
 
 }
