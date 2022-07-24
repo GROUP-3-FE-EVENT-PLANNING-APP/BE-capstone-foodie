@@ -32,14 +32,6 @@ func (data *User) toCore() users.Core {
 	}
 }
 
-func toCoreList(data []User) []users.Core {
-	result := []users.Core{}
-	for k := range data {
-		result = append(result, data[k].toCore())
-	}
-	return result
-}
-
 func FromCore(core users.Core) User {
 	return User{
 		Name:      core.Name,
