@@ -70,20 +70,3 @@ func toCoreList(data []Favourite) []favourites.RestoCore {
 	}
 	return result
 }
-
-func (data *Restaurant) toRestoCore_() favourites.RestoCore {
-	return favourites.RestoCore{
-		ID:        int(data.ID),
-		RestoName: data.RestoName,
-		Location:  data.Location,
-		Category:  data.Category,
-	}
-}
-
-func toRestoCoreList(data []Restaurant) []favourites.RestoCore {
-	result := []favourites.RestoCore{}
-	for key := range data {
-		result = append(result, data[key].toRestoCore_())
-	}
-	return result
-}
