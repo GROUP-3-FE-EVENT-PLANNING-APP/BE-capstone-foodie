@@ -1,0 +1,23 @@
+mode: set
+capstone/group3/features/favourites/data/model.go:56.55,64.2 1 1
+capstone/group3/features/favourites/data/model.go:66.58,68.24 2 1
+capstone/group3/features/favourites/data/model.go:71.2,71.15 1 1
+capstone/group3/features/favourites/data/model.go:68.24,70.3 1 1
+capstone/group3/features/favourites/data/mysql.go:13.58,17.2 1 1
+capstone/group3/features/favourites/data/mysql.go:19.95,25.30 6 1
+capstone/group3/features/favourites/data/mysql.go:34.2,34.15 1 1
+capstone/group3/features/favourites/data/mysql.go:25.30,27.3 1 0
+capstone/group3/features/favourites/data/mysql.go:27.8,29.29 2 1
+capstone/group3/features/favourites/data/mysql.go:29.29,31.4 1 1
+capstone/group3/features/favourites/data/mysql.go:37.93,42.25 3 1
+capstone/group3/features/favourites/data/mysql.go:46.2,46.32 1 1
+capstone/group3/features/favourites/data/mysql.go:42.25,44.3 1 0
+capstone/group3/features/favourites/data/mysql.go:50.96,55.25 3 1
+capstone/group3/features/favourites/data/mysql.go:59.2,59.32 1 1
+capstone/group3/features/favourites/data/mysql.go:55.25,57.3 1 0
+capstone/group3/features/favourites/data/mysql.go:63.98,68.28 5 1
+capstone/group3/features/favourites/data/mysql.go:71.2,71.41 1 1
+capstone/group3/features/favourites/data/mysql.go:68.28,70.3 1 0
+capstone/group3/features/favourites/data/mysql.go:74.135,79.25 3 1
+capstone/group3/features/favourites/data/mysql.go:83.2,83.33 1 1
+capstone/group3/features/favourites/data/mysql.go:79.25,81.3 1 0
