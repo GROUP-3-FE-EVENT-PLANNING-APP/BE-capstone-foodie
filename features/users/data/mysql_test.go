@@ -61,9 +61,9 @@ func TestLoginUserDB(t *testing.T) {
 			Email:    "dwiatmokop@gmail.com",
 			Password: "qwerty",
 		}
-		row, err := repo.LoginUserDB(mockUser)
+		result, err := repo.LoginUserDB(mockUser)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, row["id"])
+		assert.Equal(t, 1, result["id"])
 	})
 
 	t.Run("Test Login User Failed", func(t *testing.T) {
@@ -84,15 +84,11 @@ func TestUpdateDataDB(t *testing.T) {
 	db.AutoMigrate(&User{})
 
 	repo := NewUserRepository(db)
-	data := users.Core{
+	db.Create(&User{
 		Name:     "dwi",
 		Email:    "dwiatmokop@gmail.com",
 		Password: "qwerty",
-	}
-	_, err := repo.InsertData(data)
-	if err != nil {
-		fmt.Errorf("error inserting")
-	}
+	})
 
 	t.Run("Test Update User", func(t *testing.T) {
 		mockUser := map[string]interface{}{}
@@ -128,15 +124,11 @@ func TestSelectDataByMe(t *testing.T) {
 	db.AutoMigrate(&User{})
 
 	repo := NewUserRepository(db)
-	data := users.Core{
+	db.Create(&User{
 		Name:     "dwi",
 		Email:    "dwiatmokop@gmail.com",
 		Password: "qwerty",
-	}
-	_, err := repo.InsertData(data)
-	if err != nil {
-		fmt.Errorf("error inserting")
-	}
+	})
 
 	t.Run("Test Get My Profile", func(t *testing.T) {
 		result, err := repo.SelectDataByMe(1)
@@ -160,15 +152,11 @@ func TestDeleteDataByIdDB(t *testing.T) {
 	db.AutoMigrate(&User{})
 
 	repo := NewUserRepository(db)
-	data := users.Core{
+	db.Create(&User{
 		Name:     "dwi",
 		Email:    "dwiatmokop@gmail.com",
 		Password: "qwerty",
-	}
-	_, err := repo.InsertData(data)
-	if err != nil {
-		fmt.Errorf("error inserting")
-	}
+	})
 
 	t.Run("Test Delete Account", func(t *testing.T) {
 		row, err := repo.DeleteDataByIdDB(1)
