@@ -179,7 +179,7 @@ https://app.swaggerhub.com/apis-docs/dpurbosakti/wisatafoodie/1.0.0#/
 you may want to run our docker image on your container too,
 
 ```bash 
-https://hub.docker.com/repository/docker/dwiatmoko/group3-api
+https://hub.docker.com/repository/docker/dwiatmoko/capstone-group3
 ```
 ## Authors
 
