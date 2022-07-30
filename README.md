@@ -149,7 +149,9 @@ At Comments and Ratings, there are features for post the comment and rating, get
 
 <img src="capstone_erd.png">
       
-       
+## 🔁 Flowchart 
+
+<img src="Flowcharts - Flowchart.jpeg">
 
 ## Run Locally
 
